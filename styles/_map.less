@@ -1,0 +1,113 @@
+/**
+ * WP-911 — Optik-Mapping: Elastic-LESS-Variablen  <=  Workbench-Tokens (§5)
+ *
+ * Wird ueber _variables.less an den offiziellen Elastic-Hook
+ * `@import (reference, optional) "_variables"` (Ende von elastic/styles/variables.less)
+ * gehaengt. Reference-Import => nur Variablen wirken, kein CSS-Output.
+ * Dadurch wird die komplette Elastic-Palette umgefaerbt, ohne eine einzige
+ * Elastic-Datei zu aendern. Werte spiegeln die --wb-* Tokens aus _tokens.css.
+ */
+
+// ---- Marke / Akzent -------------------------------------------------------
+@color-main:                        #cc151c;   // treibt Buttons, Auswahl, Checkbox, Fokus, Badges ...
+@color-link:                        #1769aa;   // Inhalts-Links neutral-blau (Aktionen = Akzent)
+@color-link-hover:                  darken(@color-link, 10%);
+
+// ---- Text / Flaechen / Rahmen --------------------------------------------
+@color-black:                       #172033;   // Basis fuer Fonttoene
+@color-font:                        #172033;   // --wb-text
+@color-border:                      #e1e5ed;   // --wb-border
+@color-black-shade-text:            #5f6b80;   // --wb-muted (sekundaerer Text)
+@color-black-shade-border:          #e1e5ed;
+@color-black-shade-bg:              #eef1f6;
+
+// ---- Statusfarben ---------------------------------------------------------
+@color-error:                       #b4232a;   // --wb-danger
+@color-success:                     #117551;   // --wb-success
+@color-warning:                     #a65f00;   // --wb-warning
+
+// ---- Layout-Flaechen (heller Karten-Canvas) ------------------------------
+@color-layout-sidebar-background:   #ffffff;
+@color-layout-list-background:      #ffffff;
+@color-layout-content-background:   #ffffff;
+@color-layout-header-background:    #ffffff;   // helle Top-Leiste wie Panel-#headerbar
+@color-layout-footer-background:    #ffffff;
+@color-layout-mobile-header-background: #ffffff;
+@color-layout-mobile-footer-background: #ffffff;
+
+// ---- Task-Menu = dunkle Seiten-Navigation (--wb-nav-*) -------------------
+@color-taskmenu-background:                 #111827;   // --wb-nav-bg
+@color-taskmenu-button:                     #c7d0de;   // heller Idle-Text
+@color-taskmenu-button-hover:               #ffffff;
+@color-taskmenu-button-selected:            #ffffff;
+@color-taskmenu-button-selected-hover:      #ffffff;
+@color-taskmenu-button-action:              #ffffff;    // Compose-Button Text
+@color-taskmenu-button-selected-background: #273247;    // --wb-nav-hover
+@color-taskmenu-button-background-hover:    #273247;
+@color-taskmenu-button-action-background:   @color-main;         // Compose = Akzent
+@color-taskmenu-button-action-background-hover: darken(@color-main, 6%);
+@color-taskmenu-button-action-hover:        #ffffff;
+@color-taskmenu-button-logout:              #ff8f93;
+@color-taskmenu-button-logout-hover:        #ffb3b6;
+
+// ---- Suche / Toolbar ------------------------------------------------------
+@color-searchbar-background:        #ffffff;
+@color-toolbar-button:              #172033;
+@color-toolbar-button-background-hover: #eef1f6;
+@color-menu-hover:                  #ffffff;
+@color-menu-hover-background:       @color-main;
+
+// ---- Listen ---------------------------------------------------------------
+@color-list:                        #172033;
+@color-list-selected:               #172033;
+@color-list-border:                 #eef1f6;
+@color-list-secondary:              #5f6b80;
+@color-list-badge-background:       @color-main;
+@color-list-recent-badge-background: @color-main;
+@color-list-unread-status:          @color-main;   // ungelesen-Marker im Akzent
+
+// ---- Formulare / Inputs ---------------------------------------------------
+@color-input:                       #172033;
+@color-input-border:                #e1e5ed;
+@color-input-border-focus:          @color-main;
+@color-input-border-focus-shadow:   fadeout(@color-main, 78%);
+@color-input-placeholder:           #9aa4b6;
+@color-checkbox:                    @color-main;
+@color-checkbox-checked:            @color-main;
+@color-recipient-input-background:  #eef1f6;
+
+// ---- Buttons (Sekundaer neutral, Primaer = Akzent) -----------------------
+@color-btn-primary:                 #ffffff;
+@color-btn-primary-background:      @color-main;
+@color-btn-secondary:               #172033;
+@color-btn-secondary-background:    #eef1f6;
+@color-btn-danger:                  #ffffff;
+@color-btn-danger-background:       @color-error;
+
+// ---- Quota / Datepicker ---------------------------------------------------
+@color-quota-value:                 @color-main;
+@color-datepicker-highlight:        @color-main;
+@color-datepicker-active-background: @color-main;
+
+// ---- Dark-Mode (Elastic .dark-mode) auf Workbench-Dark-Tokens ------------
+@color-dark-main:                   #cc151c;
+@color-dark-background:             #0d1320;   // --wb-bg dark
+@color-dark-font:                   #edf2fb;   // --wb-text dark
+@color-dark-border:                 #2b3950;   // --wb-border dark
+@color-dark-hint:                   #9caac0;   // --wb-muted dark
+@color-dark-list-selected:          #cc151c;
+@color-dark-list-selected-background: #1d2a40; // --wb-nav-hover dark
+@color-dark-list-border:            #1a2436;
+@color-dark-input:                  #edf2fb;
+@color-dark-input-border:           #35476a;
+@color-dark-input-background:       #151e2d;   // --wb-surface dark
+@color-dark-input-focus:            #ffffff;
+@color-dark-input-border-focus:     #cc151c;
+@color-dark-input-background-focus: #1a2638;
+@color-dark-checkbox:               #35476a;
+@color-dark-checkbox-checked:       #cc151c;
+@color-dark-btn:                    #edf2fb;
+@color-dark-btn-primary-background: #cc151c;
+@color-dark-btn-secondary-background: #26344c;
+@color-dark-popover-background:     #151e2d;
+@color-dark-popover-border:         #2b3950;

@@ -1,0 +1,10 @@
+/**
+ * WP-911 — Elastic-Variablen-Hook.
+ *
+ * Elastic laedt am Ende von skins/elastic/styles/variables.less:
+ *     @import (reference, optional) "_variables";
+ * Beim Build zeigt `lessc --include-path=skins/workbench/styles` auf diesen
+ * Ordner, sodass DIESE Datei den optionalen Hook fuellt und das
+ * Optik-Mapping (_map.less) NACH den Elastic-Defaults greift (Override).
+ */
+@import "_map";

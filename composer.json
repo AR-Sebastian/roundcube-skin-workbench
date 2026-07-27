@@ -1,0 +1,18 @@
+{
+    "name": "workbench/roundcube-skin-workbench",
+    "type": "roundcube-skin",
+    "description": "Workbench — ein von Elastic abgeleitetes, marken-neutrales Roundcube-Skin: dunkle Seiten-Navigation, roter Akzent, Inter, Light + Dark, responsive.",
+    "keywords": ["roundcube", "skin", "elastic", "workbench", "dark-mode"],
+    "license": "CC-BY-SA-3.0",
+    "authors": [
+        { "name": "Workbench" }
+    ],
+    "extra": {
+        "roundcube": {
+            "min-version": "1.6.0"
+        }
+    },
+    "require": {
+        "roundcube/plugin-installer": ">=0.3.0"
+    }
+}

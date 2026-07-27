@@ -1,0 +1,51 @@
+<roundcube:include file="includes/layout.html" />
+
+<h1 class="voice"><roundcube:object name="productname" /> <roundcube:label name="login" /></h1>
+
+<div id="layout-content" class="selected no-navbar" role="main">
+	<div class="wb-login">
+		<!-- Hero (dunkle Seiten-Navigation) -->
+		<aside class="wb-login-hero">
+			<roundcube:object name="logo" src="/images/logo-dark.svg" id="wb-hero-logo" alt="Logo" />
+			<span class="wb-kicker">Workbench</span>
+			<h1>Willkommen im&nbsp;Webmail</h1>
+			<p class="wb-lede">Ihr Postfach im aufger&auml;umten Workbench-Look &mdash; ruhig, schnell und barrierearm.</p>
+			<ul class="wb-benefits">
+				<li>Aufger&auml;umte, moderne Oberfl&auml;che</li>
+				<li>Hell- und Dunkelmodus, voll tastaturbedienbar</li>
+				<li>Sichere Anmeldung an Ihrem Mailkonto</li>
+			</ul>
+			<div class="wb-hero-foot">
+				<roundcube:object name="productname" condition="config:display_product_info &gt; 0" />
+			</div>
+		</aside>
+
+		<!-- Card (Roundcube-Login-Formular) -->
+		<div class="wb-login-card">
+			<span class="wb-badge"><roundcube:label name="login" /></span>
+			<div class="wb-welcome">Anmelden</div>
+			<p class="wb-welcome-sub">Bitte melden Sie sich mit Ihren Zugangsdaten an.</p>
+
+			<roundcube:form id="login-form" name="login-form" method="post" class="propform">
+			<roundcube:object name="loginform" form="login-form" size="40" submit=true class="form-control" />
+				<div id="login-footer" role="contentinfo">
+					<roundcube:object name="version" condition="config:display_product_info == 2" />
+					<roundcube:if condition="config:support_url" />
+						<a href="<roundcube:var name='config:support_url' />" target="_blank" class="support-link"><roundcube:label name="support" /></a>
+					<roundcube:endif />
+					<roundcube:container name="loginfooter" id="login-footer" />
+				</div>
+			</form>
+
+			<div class="wb-secure" role="note">
+				<span aria-hidden="true">&#128274;</span> Verschl&uuml;sselte &Uuml;bertragung &middot; keine Datenweitergabe
+			</div>
+		</div>
+	</div>
+</div>
+
+<noscript>
+	<p class="noscriptwarning"><roundcube:label name="noscriptwarning" /></p>
+</noscript>
+
+<roundcube:include file="includes/footer.html" />

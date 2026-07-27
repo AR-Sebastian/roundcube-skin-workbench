@@ -1,0 +1,1068 @@
+/**
+ * WP-911 — Workbench Komponenten-Overrides fuer Roundcube Elastic.
+ *
+ * Optik "workbench": dunkle Seiten-Navigation, heller
+ * Karten-Canvas, roter Marken-Akzent (#cc151c), Inter, 12px-Radien,
+ * sichtbarer Fokus, Light + Dark.
+ *
+ * Farb-Remapping passiert bereits ueber _map.less (Elastic-Variablen).
+ * Hier: Typografie, Geometrie, Nav-Rail, Top-Leiste, Listen, Lesebereich,
+ * Buttons, Formulare, Login-Hero+Card, Zustaende, Dark-Alias, A11y.
+ *
+ * Konvention: --wb-* Custom Properties fuer runtime-themebare Werte,
+ * Elastic-@breakpoints fuer Media-Queries.
+ */
+
+// ===========================================================================
+// 1. Inter — self-hosted (kein CDN). §4
+// ===========================================================================
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/inter-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/inter-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/inter-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/inter-latin-700-normal.woff2') format('woff2');
+}
+
+@wb-font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+// ===========================================================================
+// 2. Dark-Alias — Roundcubes nativer Toggle (html.dark-mode) auf --wb-* Tokens
+//    (spiegelt _tokens.css html[data-wb-theme="dark"], da der Moon-Button im
+//     Taskmenu die Klasse .dark-mode setzt, nicht das data-Attribut)
+// ===========================================================================
+html.dark-mode {
+    --wb-bg: #0d1320;
+    --wb-surface: #151e2d;
+    --wb-surface-muted: #1a2638;
+    --wb-text: #edf2fb;
+    --wb-muted: #9caac0;
+    --wb-border: #2b3950;
+    --wb-nav-bg: #090e18;
+    --wb-nav-hover: #1d2a40;
+    --wb-shadow: 0 10px 30px rgba(0, 0, 0, .24);
+    --wb-shadow-sm: 0 4px 16px rgba(0, 0, 0, .28);
+}
+
+// ===========================================================================
+// 3. Basis — Font, Canvas, Textfarbe
+// ===========================================================================
+// Inter ueberall: Elastics .font-family-Mixin neu definieren (spaeter im Scope =>
+// gewinnt an ALLEN Aufrufstellen inkl. blockquote-link) UND die exakte
+// Elastic-Selektorliste direkt shadowen. Dadurch wird Roboto nirgends mehr
+// referenziert -> kein Fetch, kein 404 (§8). Icon-/Monospace-Fonts bleiben.
+.font-family() {
+    font-family: @wb-font;
+}
+html, body,
+body, button, input, optgroup, select, textarea, .popover {
+    font-family: @wb-font;
+}
+
+body {
+    background-color: var(--wb-bg);
+    color: var(--wb-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: .1px;
+}
+
+// Karten-Canvas hinter den Spalten
+#layout,
+#layout-list,
+#layout-content {
+    background-color: var(--wb-bg);
+}
+
+// ===========================================================================
+// 4. Fokus — sichtbarer Ring auf allen interaktiven Elementen. §4
+// ===========================================================================
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+.btn:focus-visible,
+[role="button"]:focus-visible,
+.listing tr:focus-visible {
+    outline: 3px solid var(--wb-focus);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+// ===========================================================================
+// 5. Dunkle Ordner-/Task-Rail = dunkle Seiten-Navigation (§5)
+// ===========================================================================
+#layout-menu,
+#taskmenu {
+    background-color: var(--wb-nav-bg);
+}
+
+#taskmenu {
+    a.button {
+        color: var(--wb-nav-idle, #c7d0de);
+        border-radius: 10px;
+        margin: 2px 8px;
+        transition: background-color .15s ease, color .15s ease;
+
+        &:hover {
+            color: #fff;
+            background-color: var(--wb-nav-hover);
+        }
+
+        // Aktiv-Marker im Akzent (linke Kante)
+        &.selected {
+            color: #fff;
+            background-color: var(--wb-nav-hover);
+            position: relative;
+
+            &:after {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 3px;
+                height: 60%;
+                border-radius: 0 3px 3px 0;
+                background: var(--wb-accent);
+            }
+        }
+
+        // Compose = Akzent-Pille
+        &.compose {
+            background-color: var(--wb-accent);
+            color: #fff;
+            &:hover { background-color: darken(#cc151c, 6%); }
+        }
+
+        &.logout:hover { color: #ffb3b6; }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 5b. Icon-only Hauptnavigation mit Hover-Label (nur Desktop).
+//     Mobile/Tablet-Drawer behaelt die Textlabels.
+// ---------------------------------------------------------------------------
+@media screen and (min-width: (@screen-width-medium + 1px)) {
+    // Rail ueber die Nachbarspalte heben, damit das Tooltip nicht geclippt wird
+    #layout-menu {
+        overflow: visible;
+        position: relative;
+        z-index: 30;
+    }
+    #taskmenu { overflow: visible; }
+
+    // Logo-Container (leer, da Logo aus) auf Desktop entfernen -> Icons nach oben
+    #layout-menu .popover-header { display: none; }
+    #taskmenu { padding-top: 12px; }
+
+    #taskmenu a {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;   // sonst klippt das <a> das Tooltip
+
+        // Label -> schwebendes Tooltip rechts neben dem Icon
+        .inner {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            margin: 0;
+            padding: 7px 11px;
+            transform: translateY(-50%) translateX(2px);
+            background: #1f2a3d;
+            color: #fff;
+            font-size: .8rem;
+            font-weight: 500;
+            line-height: 1;
+            white-space: nowrap;
+            border-radius: 8px;
+            box-shadow: var(--wb-shadow);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .12s ease, transform .12s ease;
+            z-index: 60;
+
+            &:before {   // kleiner Pfeil zum Icon
+                content: "";
+                position: absolute;
+                right: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                border: 5px solid transparent;
+                border-right-color: #1f2a3d;
+            }
+        }
+
+        &:hover .inner,
+        &:focus-visible .inner {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(8px);
+        }
+    }
+}
+
+// Logo in der Rail entfernen (Tool-Fokus: direkt zu den Mails).
+// Betrifft nur das Rail-Logo (#logo) — NICHT das Login-Hero-Logo (#wb-hero-logo).
+#layout-menu #logo,
+#taskmenu .popover-header #logo {
+    display: none !important;
+}
+
+// Aktiver Nav-Eintrag deutlich: dunkle Pille + Akzent-Icon.
+// Compose bleibt die rote CTA (ausgenommen).
+#taskmenu a.selected:not(.compose) {
+    background: var(--wb-nav-hover);
+    border-radius: 12px;
+
+    &:before { background-color: var(--wb-accent) !important; }  // Icon im Akzent
+    .inner { font-weight: 600; }
+}
+
+// Aktiver Ordner: Icon ebenfalls im Akzent (konsistent zur Rail)
+#layout-sidebar .folderlist li.selected > a:before,
+#layout-sidebar .treelist li.selected > a:before {
+    background-color: var(--wb-accent) !important;
+}
+
+// ===========================================================================
+// 6. Helle Top-Leiste (Panel-#headerbar-Anmutung)
+// ===========================================================================
+#layout-list > .header,
+#layout-content > .header,
+#layout-sidebar > .header,
+.boxtitle,
+.header-title {
+    background-color: var(--wb-surface);
+    color: var(--wb-text);
+    border-bottom: 1px solid var(--wb-border);
+}
+
+// Globale Suche mit "/"-Kbd-Anmutung
+.searchbar,
+#mailsearchform,
+.searchbar input,
+input.searchfield {
+    border-radius: var(--wb-radius);
+}
+
+.searchbar {
+    background: var(--wb-surface-muted);
+    border: 1px solid var(--wb-border);
+}
+
+// ===========================================================================
+// 7. Karten-Flaechen, Radius, Schatten
+// ===========================================================================
+#layout-list,
+#layout-content,
+#layout-sidebar {
+    @media screen and (min-width: (@screen-width-small + 1px)) {
+        margin: 8px;
+        border-radius: var(--wb-radius);
+        background-color: var(--wb-surface);
+        box-shadow: var(--wb-shadow-sm);
+        border: 1px solid var(--wb-border);
+        overflow: hidden;
+    }
+}
+
+.popupmenu,
+.popover,
+.ui-dialog,
+.ui-widget-content {
+    border-radius: var(--wb-radius) !important;
+    box-shadow: var(--wb-shadow) !important;
+}
+
+// ===========================================================================
+// 8. Nachrichtenliste (Panel-Listen-Look)
+// ===========================================================================
+.listing {
+    tr {
+        border-color: var(--wb-border);
+    }
+
+    tbody tr:hover {
+        background-color: var(--wb-surface-muted);
+    }
+
+    tbody tr.selected {
+        background-color: fade(#cc151c, 8%);
+        > td { color: var(--wb-text); }
+    }
+
+    // ungelesen: fetter + Akzent-Punkt
+    tr.unread {
+        font-weight: 600;
+    }
+}
+
+.messagelist .rowcounter,
+.messagelist td.flag span.unread:before {
+    color: var(--wb-accent);
+}
+
+// Modernere Zeilen: mehr Luft, Akzent-Kante bei aktiv/ungelesen, weicher Hover
+.messagelist tbody tr.message > td {
+    padding-top: 9px;
+    padding-bottom: 9px;
+}
+.messagelist tbody tr.selected td:first-child {
+    box-shadow: inset 3px 0 0 var(--wb-accent);
+}
+.messagelist tbody tr.unread:not(.selected) td:first-child {
+    box-shadow: inset 3px 0 0 fade(#cc151c, 45%);
+}
+.messagelist tbody tr.message:hover:not(.selected) {
+    background-color: var(--wb-surface-muted);
+}
+
+// Absender-Avatare (Initialen), via workbench.js injiziert
+.messagelist td.subject {
+    position: relative;
+    padding-left: 50px !important;
+}
+.messagelist td.subject .wb-avatar {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--wb-av, #64748b);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    box-shadow: var(--wb-shadow-sm);
+    z-index: 1;
+    font-family: @wb-font;
+}
+
+// ===========================================================================
+// 8b. Ordner-Rail dunkel (Panel-Seitennav-Look, Light UND Dark)
+//     Ueberschreibt die Karten-Flaeche aus §7 nur fuer #layout-sidebar.
+// ===========================================================================
+// Nur die Mail-Ordneransicht bekommt die dunkle Rail — NICHT das Compose-
+// Optionen-Panel (das ist ebenfalls #layout-sidebar, aber ohne .folderlist).
+body.task-mail:not(.action-compose) #layout-sidebar {
+    background: var(--wb-nav-bg);
+    color: #c7d0de;
+    border-color: rgba(255, 255, 255, .06);
+
+    // Kopf (Nutzername + Aktionen)
+    // &.listbox schlaegt Elastics spezifischeres "#layout > div > .header" (1,1,1)
+    &.listbox > .header {
+        background: var(--wb-nav-bg);
+        border-bottom: 1px solid rgba(255, 255, 255, .07);
+        color: #eef2fb;
+
+        .header-title,
+        .username {
+            background: transparent;   // §6 setzt hier sonst weiss -> hell auf hell
+            color: #eef2fb;
+        }
+        a.button { color: #c7d0de; }
+        a.button:hover { color: #fff; }
+    }
+
+    #folderlist-content,
+    .scroller { background: var(--wb-nav-bg); }
+
+    // Ordnerliste
+    .listing,
+    .folderlist,
+    .treelist {
+        background: transparent;
+
+        li { border-color: transparent; }
+
+        li a,
+        li a span,
+        li .branch,
+        li .name { color: #c7d0de; }
+
+        li a:before,
+        li .treetoggle:before { color: #9fb0c9; }
+
+        li a:hover {
+            background: var(--wb-nav-hover);
+            color: #fff;
+            border-radius: 8px;
+        }
+
+        // aktiver Ordner: Akzent-Marker + heller Text
+        li.selected > a,
+        li.selected > a span,
+        li.selected > a .name {
+            color: #fff;
+            background: var(--wb-nav-hover);
+            border-radius: 8px;
+        }
+        li.selected > a:before { color: #fff; }
+        li.selected > a {
+            position: relative;
+            &:after {
+                content: '';
+                position: absolute;
+                left: 0; top: 50%;
+                transform: translateY(-50%);
+                width: 3px; height: 60%;
+                border-radius: 0 3px 3px 0;
+                background: var(--wb-accent);
+            }
+        }
+
+        // Ungelesen-Zaehler
+        .unreadcount,
+        .badge,
+        span.unreadcount {
+            background: var(--wb-accent);
+            color: #fff;
+            border: 0;
+        }
+    }
+
+    // Fusszeile (Quota)
+    &.listbox > .footer {
+        background: var(--wb-nav-bg);
+        border-top: 1px solid rgba(255, 255, 255, .07);
+        color: #9fb0c9;
+        .quota-widget,
+        .quota-widget * { color: #9fb0c9; }
+    }
+}
+
+// ===========================================================================
+// 8c. Premium-Feinschliff: Tabellenziffern, Mikro-Transitions, Scrollbars
+// ===========================================================================
+// Zahlen fluchten (Datum, Zaehler, Pagination, Quota)
+.messagelist .date,
+.messagelist .rowcounter,
+.messagelist td.size,
+.pagenav .countdisplay,
+.quota-widget .count,
+#messagelist-header .header-title {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+}
+
+// Sanfte Uebergaenge (nur wenn Bewegung erlaubt)
+@media (prefers-reduced-motion: no-preference) {
+    .messagelist tbody tr.message {
+        transition: background-color .13s ease, box-shadow .13s ease;
+    }
+    .messagelist td.subject .wb-avatar,
+    #taskmenu a:before,
+    .folderlist li a { transition: background-color .13s ease, color .13s ease; }
+}
+
+// Dezente, themen-treue Scrollbars
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--wb-border) transparent;
+}
+.scroller::-webkit-scrollbar,
+#messagelist::-webkit-scrollbar,
+#messagebody::-webkit-scrollbar { width: 9px; height: 9px; }
+.scroller::-webkit-scrollbar-thumb,
+#messagelist::-webkit-scrollbar-thumb,
+#messagebody::-webkit-scrollbar-thumb {
+    background: var(--wb-border);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+.scroller::-webkit-scrollbar-thumb:hover { background: var(--wb-muted); background-clip: padding-box; }
+.scroller::-webkit-scrollbar-track { background: transparent; }
+// dunkle Rail: hellere Scrollbar
+#layout-sidebar .scroller { scrollbar-color: var(--wb-nav-hover) transparent; }
+
+// Feinerer Auswahl-Zustand (ruhige Akzent-Karte)
+.messagelist tbody tr.selected {
+    background-color: fade(#cc151c, 6%);
+    box-shadow: inset 0 0 0 1px fade(#cc151c, 12%);
+}
+
+// ===========================================================================
+// 8d. Empfaenger-Chips (Verfassen) + Skeleton-Loader (via workbench.js)
+// ===========================================================================
+ul.recipient-input li.recipient {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--wb-surface-muted);
+    border: 1px solid var(--wb-border);
+    border-radius: 999px;
+    padding: 2px 9px 2px 3px;
+    margin: 2px;
+    line-height: 1.5;
+}
+.wb-chip-av {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--wb-av, #64748b);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .58rem;
+    font-weight: 600;
+    flex: 0 0 auto;
+    font-family: @wb-font;
+}
+
+.wb-skel-host { position: relative; }
+.wb-skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: var(--wb-surface);
+    overflow: hidden;
+}
+.wb-sk-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--wb-border);
+}
+.wb-sk-av { width: 30px; height: 30px; border-radius: 50%; flex: 0 0 auto; }
+.wb-sk-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.wb-sk-l1 { height: 9px; width: 45%; border-radius: 4px; }
+.wb-sk-l2 { height: 9px; width: 75%; border-radius: 4px; }
+.wb-sk-av, .wb-sk-l1, .wb-sk-l2 {
+    background: linear-gradient(90deg, var(--wb-border) 25%, var(--wb-surface-muted) 37%, var(--wb-border) 63%);
+    background-size: 400% 100%;
+    animation: wb-shimmer 1.3s ease infinite;
+}
+@keyframes wb-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .wb-sk-av, .wb-sk-l1, .wb-sk-l2 { animation: none; }
+}
+
+// ===========================================================================
+// 8e. Premium-Interaktionen: Sticky-Kopf, Progressbar, Hover-Aktionen, Hilfe
+// ===========================================================================
+// Sticky Nachrichten-Kopf beim Lesen (bleibt beim Scrollen oben)
+#message-header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+// Duenne Top-Progressbar (via workbench.js an rcmail.busy)
+.wb-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, var(--wb-accent), #ff5a60);
+    box-shadow: 0 0 10px rgba(204, 21, 28, .55);
+    z-index: 99999;
+    opacity: 0;
+    transition: width .18s ease, opacity .3s ease;
+    pointer-events: none;
+    border-radius: 0 3px 3px 0;
+}
+
+// Hover-Schnellaktionen je Nachrichtenzeile
+.wb-row-actions {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 4px;
+    padding: 3px;
+    background: var(--wb-surface);
+    border: 1px solid var(--wb-border);
+    border-radius: 10px;
+    box-shadow: var(--wb-shadow-sm);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .12s ease;
+    z-index: 2;
+}
+.messagelist tbody tr.message:hover .wb-row-actions,
+.messagelist tbody tr.message:focus-within .wb-row-actions {
+    opacity: 1;
+    visibility: visible;
+}
+.wb-ra {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--wb-muted);
+    cursor: pointer;
+    padding: 0;
+}
+.wb-ra svg { width: 16px; height: 16px; }
+.wb-ra:hover { background: var(--wb-surface-muted); color: var(--wb-text); }
+.wb-ra-archive:hover { color: var(--wb-accent); background: fade(#cc151c, 8%); }
+.wb-ra-trash:hover   { color: var(--wb-danger); background: fade(#b4232a, 8%); }
+.wb-ra-read:hover    { color: var(--wb-success); background: fade(#117551, 8%); }
+
+// Tastatur-Cheatsheet ("?")
+.wb-help {
+    position: fixed;
+    inset: 0;
+    background: fade(#0d1320, 55%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    padding: 20px;
+}
+.wb-help-card {
+    background: var(--wb-surface);
+    color: var(--wb-text);
+    border: 1px solid var(--wb-border);
+    border-radius: 16px;
+    box-shadow: var(--wb-shadow);
+    padding: 24px 26px;
+    width: min(460px, 92vw);
+    font-family: @wb-font;
+}
+.wb-help-card h2 { margin: 0 0 16px; font-size: 1.15rem; }
+.wb-help-card dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 16px;
+    margin: 0;
+    align-items: center;
+}
+.wb-help-card dt { margin: 0; }
+.wb-help-card dd { margin: 0; color: var(--wb-muted); }
+.wb-help-card kbd {
+    display: inline-block;
+    min-width: 22px;
+    text-align: center;
+    padding: 3px 8px;
+    background: var(--wb-surface-muted);
+    border: 1px solid var(--wb-border);
+    border-bottom-width: 2px;
+    border-radius: 7px;
+    font-family: @wb-font;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--wb-text);
+}
+.wb-help-foot { margin-top: 18px; font-size: .82rem; color: var(--wb-muted); text-align: right; }
+
+// ===========================================================================
+// 9. Lesebereich / Vorschau — ruhige Kopfzone
+// ===========================================================================
+#messagecontent,
+#message-content {
+    background-color: var(--wb-surface);
+}
+
+#message-header {
+    background: var(--wb-surface);
+    border: 1px solid var(--wb-border);
+    border-radius: var(--wb-radius);
+    padding: 1rem 1.25rem;
+    box-shadow: var(--wb-shadow-sm);
+
+    & > .subject {
+        color: var(--wb-text);
+        letter-spacing: -.2px;
+    }
+
+    // Grosser Initialen-Avatar (via workbench.js injiziert) statt Platzhalter-Foto
+    .wb-avatar-lg {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--wb-av, #64748b);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: .02em;
+        font-family: @wb-font;
+        flex: 0 0 auto;
+        box-shadow: var(--wb-shadow-sm);
+    }
+
+    // Absender fett, Meta ruhig
+    .header-summary .rcmContactAddress {
+        font-weight: 600;
+        color: var(--wb-text);
+    }
+    .header-summary {
+        color: var(--wb-muted);
+    }
+}
+
+// ===========================================================================
+// 10. Buttons — Primaer = Akzent, Sekundaer neutral
+// ===========================================================================
+.btn,
+button.btn,
+a.btn {
+    border-radius: 10px;
+    font-weight: 600;
+    min-height: 40px;
+    transition: background-color .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.btn-primary,
+button.btn.mainaction,
+.formbuttons .btn.mainaction {
+    background-color: var(--wb-accent);
+    border-color: var(--wb-accent);
+    color: var(--wb-action-contrast);
+    box-shadow: var(--wb-shadow-sm);
+
+    &:hover { filter: brightness(.94); }
+}
+
+// Primaere CTA hart durchsetzen: der :default-Submit (Login) wird sonst von
+// UA-/Bootstrap-Resten blass gerendert. Voll deckender Akzent, kein Verlauf.
+#rcmloginsubmit,
+#login-form .btn.mainaction,
+button.btn.btn-primary,
+input.btn.btn-primary {
+    background: var(--wb-accent) !important;
+    background-image: none !important;
+    border-color: var(--wb-accent) !important;
+    color: #fff !important;
+    opacity: 1 !important;
+
+    &:hover { background: darken(#cc151c, 6%) !important; }
+    &:focus-visible { outline: 3px solid var(--wb-focus); outline-offset: 2px; }
+}
+
+.btn-secondary {
+    background-color: var(--wb-surface-muted);
+    border: 1px solid var(--wb-border);
+    color: var(--wb-text);
+
+    &:hover { background-color: var(--wb-border); }
+}
+
+// ===========================================================================
+// 11. Formulare / Inputs — Feldhoehe, Fokus, Radius (workbench-forms Anmutung)
+// ===========================================================================
+input.form-control,
+select.form-control,
+textarea.form-control,
+.form-control {
+    border-radius: 10px;
+    border-color: var(--wb-border);
+    min-height: 40px;
+    background-color: var(--wb-surface);
+    color: var(--wb-text);
+
+    &:focus {
+        border-color: var(--wb-accent);
+        box-shadow: 0 0 0 3px fade(#cc151c, 18%);
+    }
+
+    &::placeholder { color: var(--wb-muted); }
+}
+
+// Validierungszustand
+.form-control.is-invalid,
+input.error {
+    border-color: var(--wb-danger);
+    box-shadow: 0 0 0 3px fade(#b4232a, 16%);
+}
+
+// ===========================================================================
+// 12. Login — Zweispalten Hero + Card (§5, Template-Override login.html)
+// ===========================================================================
+.task-login {
+    #layout,
+    #layout-content {
+        background: var(--wb-bg);
+    }
+
+    #layout-content {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .wb-login {
+        display: grid;
+        grid-template-columns: 1.05fr .95fr;
+        width: min(1040px, 94vw);
+        margin: auto;
+        min-height: min(620px, 86vh);
+        background: var(--wb-surface);
+        border: 1px solid var(--wb-border);
+        border-radius: 18px;
+        box-shadow: var(--wb-shadow);
+        overflow: hidden;
+
+        @media screen and (max-width: @screen-width-small) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    // Hero (links) — dunkel wie Panel-Seitennav
+    .wb-login-hero {
+        position: relative;
+        padding: 3rem 2.75rem;
+        color: #eef2fb;
+        background:
+            radial-gradient(1200px 400px at -10% -10%, rgba(204,21,28,.35), transparent 60%),
+            linear-gradient(160deg, #131c2e 0%, #0c1220 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+
+        @media screen and (max-width: @screen-width-small) {
+            display: none;   // mobil: nur Card
+        }
+
+        .wb-kicker {
+            font-size: .8rem;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #ff8f93;
+        }
+        h1 {
+            font-size: 2.1rem;
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -.5px;
+        }
+        p.wb-lede {
+            color: #b9c3d6;
+            font-size: 1.02rem;
+            line-height: 1.55;
+            margin: 0;
+        }
+        ul.wb-benefits {
+            list-style: none;
+            margin: .5rem 0 0;
+            padding: 0;
+            display: grid;
+            gap: .6rem;
+
+            li {
+                position: relative;
+                padding-left: 1.75rem;
+                color: #d3dbea;
+                line-height: 1.4;
+
+                &:before {
+                    content: '';
+                    position: absolute;
+                    left: 0; top: .35em;
+                    width: 14px; height: 14px;
+                    border-radius: 4px;
+                    background: var(--wb-accent);
+                    box-shadow: 0 0 0 3px rgba(204,21,28,.22);
+                }
+            }
+        }
+        .wb-hero-foot {
+            margin-top: auto;
+            font-size: .82rem;
+            color: #8ea0bd;
+        }
+    }
+
+    // Card (rechts) — Roundcube #login-form
+    .wb-login-card {
+        padding: 3rem 2.75rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: var(--wb-surface);
+
+        .wb-badge {
+            align-self: flex-start;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--wb-accent);
+            background: fade(#cc151c, 10%);
+            padding: .3rem .6rem;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+        .wb-welcome {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0 0 .35rem;
+            color: var(--wb-text);
+        }
+        .wb-welcome-sub {
+            color: var(--wb-muted);
+            margin: 0 0 1.75rem;
+            font-size: .95rem;
+        }
+        .wb-secure {
+            margin-top: 1.5rem;
+            font-size: .82rem;
+            color: var(--wb-muted);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+    }
+
+    #logo { display: none; }   // Logo lebt im Hero
+
+    #login-form {
+        position: static;
+        top: auto;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    // Mobil: Card einspaltig, kompakteres Padding, kein Ueberlauf.
+    // (Roundcube-Login-Tabelle nicht zwangsbreiten -> input-group bleibt inline)
+    @media screen and (max-width: @screen-width-small) {
+        .wb-login {
+            width: 100%;
+            max-width: 100%;
+            min-height: auto;
+            border-radius: 14px;
+        }
+        .wb-login-card {
+            padding: 2rem 1.25rem;
+            box-sizing: border-box;
+            max-width: 100%;
+            overflow: hidden;
+        }
+    }
+}
+
+// ===========================================================================
+// 13. Zustaende — leer / laden / Fehler / permission-denied (Panel-Stil)
+// ===========================================================================
+// Roundcube Message-Boxen — mit Status-Farbe (linke Kante + zarter Tint)
+.boxinformation,
+.boxwarning,
+.boxerror,
+.boxconfirmation,
+.boxsuccess {
+    border-radius: var(--wb-radius);
+    border: 1px solid var(--wb-border);
+    border-left-width: 4px;
+    box-shadow: var(--wb-shadow-sm);
+}
+.boxconfirmation,
+.boxsuccess {
+    border-left-color: var(--wb-success);
+    background: fade(#117551, 7%);
+}
+.boxinformation {
+    border-left-color: var(--wb-info);
+    background: fade(#1769aa, 7%);
+}
+.boxwarning {
+    border-left-color: var(--wb-warning);
+    background: fade(#a65f00, 9%);
+}
+.boxerror {
+    border-left-color: var(--wb-danger);
+    background: fade(#b4232a, 7%);
+}
+
+// leere Liste
+.messagelist-empty,
+.watermark,
+.boxlist .noresult,
+#messagelist tbody:empty:after {
+    color: var(--wb-muted);
+}
+
+// Ladeindikator im Akzent
+.rcmMessagePane .loading,
+.googie_list .loading,
+#messagestack .loading,
+.spinner {
+    color: var(--wb-accent);
+}
+
+// permission-denied / session — als klare Karte
+.task-error #layout-content,
+.session-error {
+    background: var(--wb-surface);
+    color: var(--wb-text);
+}
+
+// ===========================================================================
+// 14. A11y — reduced-motion & prefers-contrast (§4)
+// ===========================================================================
+@media (prefers-reduced-motion: reduce) {
+    *, *:before, *:after {
+        transition-duration: .001ms !important;
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media (prefers-contrast: more) {
+    :root {
+        --wb-border: #b9c0cd;
+        --wb-muted: #3a4557;
+    }
+    .btn, .form-control, #message-header {
+        border-width: 2px !important;
+    }
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    .btn:focus-visible {
+        outline-width: 4px;
+    }
+}

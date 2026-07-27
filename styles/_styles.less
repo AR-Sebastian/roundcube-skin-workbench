@@ -1,0 +1,17 @@
+/**
+ * WP-911 — Elastic-Styles-Hook.
+ *
+ * Elastic laedt am Ende von skins/elastic/styles/styles.less:
+ *     @import (optional) "_styles";
+ * Ueber --include-path landet hier unser CSS-Output: zuerst die --wb-*
+ * Design-Tokens (verbatim §4), dann die Komponenten-Overrides.
+ */
+
+/* §4 Design-Tokens (Custom Properties, Light + Dark) — verbatim inline */
+@import (inline) "_tokens.css";
+
+/* Komponenten-Overrides (Shell/Nav/Listen/Lesen/Verfassen/Login/Zustaende) */
+@import "workbench";
+
+/* Eigenes Linien-Icon-Set (ersetzt sichtbarste FontAwesome-Glyphen) */
+@import "icons";
