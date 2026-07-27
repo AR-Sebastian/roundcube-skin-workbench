@@ -1,5 +1,9 @@
 # Roundcube-Skin „workbench"
 
+[![Packagist Version](https://img.shields.io/packagist/v/ar-sebastian/roundcube-skin-workbench)](https://packagist.org/packages/ar-sebastian/roundcube-skin-workbench)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/ar-sebastian/roundcube-skin-workbench)](https://packagist.org/packages/ar-sebastian/roundcube-skin-workbench)
+[![License](https://img.shields.io/packagist/l/ar-sebastian/roundcube-skin-workbench)](LICENSE)
+
 Ein von **Elastic abgeleitetes** Roundcube-Skin im „workbench"-Look: dunkle
 Seiten-Navigation, heller Karten-Canvas, roter Marken-Akzent (`#cc151c`),
 Inter-Typografie, 12-px-Radien, sichtbarer Fokus, Light **und** Dark. Nur
@@ -111,6 +115,24 @@ lessc --include-path=skins/workbench/styles skins/elastic/styles/embed.less skin
 ```
 
 Voraussetzung: Node/npm; `lessc` (less@4) + optional `less-plugin-clean-css`.
+
+## Installation
+
+**Composer** (empfohlen, via Packagist):
+
+```bash
+composer require ar-sebastian/roundcube-skin-workbench
+```
+
+Der `roundcube/plugin-installer` legt das Skin automatisch unter `skins/workbench/` ab.
+
+**Manuell** (Release-Archiv):
+
+```bash
+tar xzf workbench-skin-1.1.2.tar.gz -C skins/   # ergibt skins/workbench/
+```
+
+Releases: <https://github.com/AR-Sebastian/roundcube-skin-workbench/releases>
 
 ## Aktivierung
 
