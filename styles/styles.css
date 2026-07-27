@@ -7640,6 +7640,47 @@ input.error {
     outline-width: 4px;
   }
 }
+@media (hover: none) {
+  .wb-row-actions {
+    display: none !important;
+  }
+}
+html[dir="rtl"] .messagelist td.subject {
+  padding-left: 14px !important;
+  padding-right: 50px !important;
+}
+html[dir="rtl"] .messagelist td.subject .wb-avatar {
+  left: auto;
+  right: 10px;
+}
+html[dir="rtl"] .wb-row-actions {
+  right: auto;
+  left: 8px;
+}
+html[dir="rtl"] #taskmenu a .inner {
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%) translateX(-2px);
+}
+html[dir="rtl"] #taskmenu a:hover .inner,
+html[dir="rtl"] #taskmenu a:focus-visible .inner {
+  transform: translateY(-50%) translateX(-8px);
+}
+html[dir="rtl"] #taskmenu a .inner:before {
+  right: auto;
+  left: 100%;
+  border-right-color: transparent;
+  border-left-color: #1f2a3d;
+}
+html[dir="rtl"] #message-header .wb-avatar-lg {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+html[dir="rtl"] #layout-sidebar .folderlist li.selected > a:after {
+  left: auto;
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
 /* Eigenes Linien-Icon-Set (ersetzt sichtbarste FontAwesome-Glyphen) */
 /**
  * WP-911 — Eigenes Linien-Icon-Set (Lucide-Stil). GENERIERT via tools/genicons.js

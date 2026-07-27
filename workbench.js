@@ -22,6 +22,31 @@
     return h;
   }
 
+  // --- i18n (EN default + DE); Sprache aus rcmail.env.lang, erweiterbar ---
+  var STR = {
+    en: {
+      mark_read: "Mark as read", archive: "Archive", del: "Delete",
+      shortcuts: "Keyboard shortcuts", esc_hint: "Press Esc to close",
+      s_compose: "Compose new email", s_reply: "Reply", s_replyall: "Reply all",
+      s_forward: "Forward", s_archive: "Archive", s_delete: "Delete",
+      s_read: "Mark as read", s_search: "Focus search", s_help: "Show this help",
+      s_esc: "Close / back"
+    },
+    de: {
+      mark_read: "Als gelesen markieren", archive: "Archivieren", del: "Löschen",
+      shortcuts: "Tastenkürzel", esc_hint: "Esc zum Schließen",
+      s_compose: "Neue E-Mail verfassen", s_reply: "Antworten", s_replyall: "Allen antworten",
+      s_forward: "Weiterleiten", s_archive: "Archivieren", s_delete: "Löschen",
+      s_read: "Als gelesen markieren", s_search: "Suche fokussieren", s_help: "Diese Hilfe anzeigen",
+      s_esc: "Schließen / Zurück"
+    }
+  };
+  function lang() {
+    var l = (window.rcmail && rcmail.env && rcmail.env.lang) || document.documentElement.lang || "en";
+    return String(l).slice(0, 2).toLowerCase();
+  }
+  function T(k) { var d = STR[lang()] || STR.en; return d[k] || STR.en[k] || k; }
+
   function decorate(row) {
     if (!row || row.nodeType !== 1) return;
     if (row.querySelector && row.querySelector(".wb-avatar")) return;
@@ -131,9 +156,9 @@
     if (!subj) return;
     var box = document.createElement("span");
     box.className = "wb-row-actions";
-    [["read", "Als gelesen markieren", "mark", "read"],
-     ["archive", "Archivieren", "archive", ""],
-     ["trash", "Löschen", "delete", ""]].forEach(function (a) {
+    [["read", T("mark_read"), "mark", "read"],
+     ["archive", T("archive"), "archive", ""],
+     ["trash", T("del"), "delete", ""]].forEach(function (a) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "wb-ra wb-ra-" + a[0];
@@ -164,39 +189,47 @@
 
   // ---- Tastatur-Shortcuts + Cheatsheet ----
   var SHORTCUTS = [
-    ["c", "Neue E-Mail verfassen"],
-    ["r", "Antworten"],
-    ["a", "Allen antworten"],
-    ["f", "Weiterleiten"],
-    ["e", "Archivieren"],
-    ["#", "Löschen"],
-    ["u", "Als gelesen markieren"],
-    ["/", "Suche fokussieren"],
-    ["?", "Diese Hilfe anzeigen"],
-    ["Esc", "Schließen / Zurück"]
+    ["c", "s_compose"], ["r", "s_reply"], ["a", "s_replyall"], ["f", "s_forward"],
+    ["e", "s_archive"], ["#", "s_delete"], ["u", "s_read"], ["/", "s_search"],
+    ["?", "s_help"], ["Esc", "s_esc"]
   ];
   var CMD = { c: "compose", r: "reply", a: "reply-all", f: "forward", e: "archive" };
   function isTyping() {
     var el = document.activeElement;
     return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || el.isContentEditable));
   }
-  var helpEl = null;
+  var helpEl = null, helpPrevFocus = null;
   function buildHelp() {
     var ov = document.createElement("div");
     ov.className = "wb-help";
-    ov.innerHTML = '<div class="wb-help-card" role="dialog" aria-label="Tastenkuerzel"><h2>Tastenkürzel</h2><dl></dl><div class="wb-help-foot">Esc zum Schließen</div></div>';
-    var dl = ov.querySelector("dl");
+    var card = document.createElement("div");
+    card.className = "wb-help-card";
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "true");
+    card.setAttribute("aria-label", T("shortcuts"));
+    card.tabIndex = -1;
+    var h2 = document.createElement("h2"); h2.textContent = T("shortcuts");
+    var dl = document.createElement("dl");
     SHORTCUTS.forEach(function (s) {
-      var dt = document.createElement("dt"); dt.innerHTML = "<kbd>" + (s[0] === "&" ? "&amp;" : s[0]) + "</kbd>";
-      var dd = document.createElement("dd"); dd.textContent = s[1];
+      var dt = document.createElement("dt");
+      var kbd = document.createElement("kbd"); kbd.textContent = s[0]; dt.appendChild(kbd);
+      var dd = document.createElement("dd"); dd.textContent = T(s[1]);
       dl.appendChild(dt); dl.appendChild(dd);
     });
+    var foot = document.createElement("div"); foot.className = "wb-help-foot"; foot.textContent = T("esc_hint");
+    card.appendChild(h2); card.appendChild(dl); card.appendChild(foot);
+    ov.appendChild(card);
     ov.addEventListener("click", function (e) { if (e.target === ov) closeHelp(); });
     document.body.appendChild(ov);
+    try { card.focus(); } catch (e) {}
     return ov;
   }
-  function toggleHelp() { if (helpEl) return closeHelp(); helpEl = buildHelp(); }
-  function closeHelp() { if (helpEl) { helpEl.parentNode.removeChild(helpEl); helpEl = null; } }
+  function toggleHelp() { if (helpEl) return closeHelp(); helpPrevFocus = document.activeElement; helpEl = buildHelp(); }
+  function closeHelp() {
+    if (!helpEl) return;
+    helpEl.parentNode.removeChild(helpEl); helpEl = null;
+    try { if (helpPrevFocus && helpPrevFocus.focus) helpPrevFocus.focus(); } catch (e) {}
+  }
   function initShortcuts() {
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") { if (helpEl) { e.preventDefault(); closeHelp(); } return; }

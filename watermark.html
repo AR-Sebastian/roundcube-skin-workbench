@@ -54,17 +54,29 @@
       contacts:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" '+A+'/><circle cx="9" cy="7" r="4" '+A+'/><path d="M22 21v-2a4 4 0 0 0-3-3.87" '+A+'/><path d="M16 3.13a4 4 0 0 1 0 7.75" '+A+'/>'
     };
     var TXT = {
-      mail:     ['Keine Nachricht ausgewählt', 'Wählen Sie links eine Nachricht aus, um sie hier zu lesen.'],
-      settings: ['Kein Bereich ausgewählt', 'Wählen Sie links einen Einstellungsbereich.'],
-      contacts: ['Kein Kontakt ausgewählt', 'Wählen Sie links einen Kontakt aus.']
+      en: {
+        mail:     ['No message selected', 'Select a message on the left to read it here.'],
+        settings: ['No section selected', 'Select a settings section on the left.'],
+        contacts: ['No contact selected', 'Select a contact on the left.']
+      },
+      de: {
+        mail:     ['Keine Nachricht ausgewählt', 'Wählen Sie links eine Nachricht aus, um sie hier zu lesen.'],
+        settings: ['Kein Bereich ausgewählt', 'Wählen Sie links einen Einstellungsbereich.'],
+        contacts: ['Kein Kontakt ausgewählt', 'Wählen Sie links einen Kontakt aus.']
+      }
     };
-    var task = 'mail';
-    try { task = (window.parent && window.parent.rcmail && window.parent.rcmail.env && window.parent.rcmail.env.task) || 'mail'; } catch (e) {}
+    var task = 'mail', lng = 'en';
+    try {
+      var env = window.parent && window.parent.rcmail && window.parent.rcmail.env;
+      task = (env && env.task) || 'mail';
+      lng = String((env && env.lang) || document.documentElement.lang || navigator.language || 'en').slice(0, 2).toLowerCase();
+    } catch (e) {}
     var key = task === 'settings' ? 'settings' : (task === 'addressbook' ? 'contacts' : 'mail');
+    var t = (TXT[lng] || TXT.en)[key];
     document.getElementById('wb-ico').innerHTML =
       '<svg viewBox="0 0 24 24">' + ICONS[key] + '</svg>';
-    document.getElementById('wb-title').textContent = TXT[key][0];
-    document.getElementById('wb-sub').textContent = TXT[key][1];
+    document.getElementById('wb-title').textContent = t[0];
+    document.getElementById('wb-sub').textContent = t[1];
   })();
   </script>
 </body>

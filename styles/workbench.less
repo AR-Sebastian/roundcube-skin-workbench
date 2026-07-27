@@ -1066,3 +1066,46 @@ input.error {
         outline-width: 4px;
     }
 }
+
+// ===========================================================================
+// 15. Touch-Parität & RTL
+// ===========================================================================
+// Hover-Schnellaktionen sind eine Desktop-Erweiterung. Auf Touch (kein Hover)
+// ausblenden -> mobil die Standard-Toolbar nutzen, kein ueberlappendes Clutter.
+@media (hover: none) {
+    .wb-row-actions { display: none !important; }
+}
+
+// Rechts-nach-links (Arabisch/Hebraeisch): Custom-Komponenten spiegeln.
+html[dir="rtl"] {
+    .messagelist td.subject {
+        padding-left: 14px !important;
+        padding-right: 50px !important;
+    }
+    .messagelist td.subject .wb-avatar { left: auto; right: 10px; }
+    .wb-row-actions { right: auto; left: 8px; }
+
+    // Rail-Tooltip auf die andere Seite + Pfeil spiegeln
+    #taskmenu a .inner {
+        left: auto;
+        right: 100%;
+        transform: translateY(-50%) translateX(-2px);
+    }
+    #taskmenu a:hover .inner,
+    #taskmenu a:focus-visible .inner { transform: translateY(-50%) translateX(-8px); }
+    #taskmenu a .inner:before {
+        right: auto;
+        left: 100%;
+        border-right-color: transparent;
+        border-left-color: #1f2a3d;
+    }
+
+    #message-header .wb-avatar-lg { margin-right: 0; margin-left: 1rem; }
+
+    // Aktiv-Marker in Ordnerliste auf die rechte Kante
+    #layout-sidebar .folderlist li.selected > a:after {
+        left: auto;
+        right: 0;
+        border-radius: 3px 0 0 3px;
+    }
+}

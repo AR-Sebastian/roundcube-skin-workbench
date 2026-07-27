@@ -7,13 +7,13 @@
 		<!-- Hero (dunkle Seiten-Navigation) -->
 		<aside class="wb-login-hero">
 			<roundcube:object name="logo" src="/images/logo-dark.svg" id="wb-hero-logo" alt="Logo" />
-			<span class="wb-kicker">Workbench</span>
-			<h1>Willkommen im&nbsp;Webmail</h1>
-			<p class="wb-lede">Ihr Postfach im aufger&auml;umten Workbench-Look &mdash; ruhig, schnell und barrierearm.</p>
+			<span class="wb-kicker"><roundcube:label name="wb_kicker" /></span>
+			<h1><roundcube:label name="wb_welcome" /></h1>
+			<p class="wb-lede"><roundcube:label name="wb_lede" /></p>
 			<ul class="wb-benefits">
-				<li>Aufger&auml;umte, moderne Oberfl&auml;che</li>
-				<li>Hell- und Dunkelmodus, voll tastaturbedienbar</li>
-				<li>Sichere Anmeldung an Ihrem Mailkonto</li>
+				<li><roundcube:label name="wb_benefit1" /></li>
+				<li><roundcube:label name="wb_benefit2" /></li>
+				<li><roundcube:label name="wb_benefit3" /></li>
 			</ul>
 			<div class="wb-hero-foot">
 				<roundcube:object name="productname" condition="config:display_product_info &gt; 0" />
@@ -23,8 +23,8 @@
 		<!-- Card (Roundcube-Login-Formular) -->
 		<div class="wb-login-card">
 			<span class="wb-badge"><roundcube:label name="login" /></span>
-			<div class="wb-welcome">Anmelden</div>
-			<p class="wb-welcome-sub">Bitte melden Sie sich mit Ihren Zugangsdaten an.</p>
+			<div class="wb-welcome"><roundcube:label name="wb_signin" /></div>
+			<p class="wb-welcome-sub"><roundcube:label name="wb_signin_sub" /></p>
 
 			<roundcube:form id="login-form" name="login-form" method="post" class="propform">
 			<roundcube:object name="loginform" form="login-form" size="40" submit=true class="form-control" />
@@ -38,7 +38,7 @@
 			</form>
 
 			<div class="wb-secure" role="note">
-				<span aria-hidden="true">&#128274;</span> Verschl&uuml;sselte &Uuml;bertragung &middot; keine Datenweitergabe
+				<span aria-hidden="true">&#128274;</span> <roundcube:label name="wb_secure" />
 			</div>
 		</div>
 	</div>

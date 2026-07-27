@@ -10,6 +10,40 @@ Oberfläche — der Roundcube-Kern bleibt unverändert. **Marken-neutral / rebra
 - **Prinzip:** `meta.json` → `"extends": "elastic"`; Overrides ausschließlich in
   `skins/workbench/`. Kein Eingriff in Core, Plugins oder `skins/elastic/`.
 
+## Screenshots
+
+| Login | Posteingang (Light) |
+|---|---|
+| ![Login](docs/login-light.png) | ![Posteingang hell](docs/mail-light.png) |
+
+| Posteingang (Dark) | Nachricht lesen |
+|---|---|
+| ![Posteingang dunkel](docs/mail-dark.png) | ![Nachricht lesen](docs/mail-read.png) |
+
+## Features
+
+- **Light + Dark** über den nativen Roundcube-Toggle (Mond-Button); Tokens auf
+  `html.dark-mode`.
+- **Icon-only Task-Rail** mit Hover-Tooltips; eigenes Linien-Icon-Set (Lucide-Stil)
+  statt der auffälligsten FontAwesome-Glyphen.
+- **Initialen-Avatare** in Liste, Lesekopf und Empfänger-Chips (rein kosmetisch, JS).
+- **UX-Extras** (dezent, abschaltbar durch Entfernen von `workbench.js`):
+  Skeleton-Loader, Top-Progressbar, Hover-Schnellaktionen, Tastatur-Shortcuts
+  mit Cheatsheet (`?`).
+- **Internationalisierung:** Skin-Localization (`localization/en_US.inc` +
+  `de_DE.inc`, `meta.json` → `"localization": true`) für den Login; EN/DE-Wörterbuch
+  in `workbench.js` und `watermark.html`, Sprache aus `rcmail.env.lang`.
+  **Englisch ist Default.**
+- **RTL:** Elastic liefert das Basis-Flip; die Custom-Komponenten (Avatare,
+  Hover-Aktionen, Rail-Tooltip, Aktiv-Marker, Lesekopf-Avatar) sind für
+  `html[dir="rtl"]` gespiegelt.
+- **Touch:** Hover-Schnellaktionen werden auf `@media (hover: none)` ausgeblendet —
+  mobil greift die Standard-Toolbar.
+- **A11y:** sichtbarer Fokus, `aria-hidden` für dekorative Avatare, Cheatsheet als
+  `aria-modal` mit Fokus-Setzen und -Rücksprung.
+- **Marken-neutral:** Akzentfarbe = Token `--wb-accent`, Logo in `images/`
+  austauschbar. Keine Produkt-/Hersteller-Nennung.
+
 ## Aufbau
 
 ```
@@ -35,6 +69,7 @@ skins/workbench/
                      Empfaenger-Chips), Skeleton-Loader, Top-Progressbar,
                      Hover-Schnellaktionen, Tastatur-Shortcuts + Cheatsheet ("?")
   tools/genicons.js  Generator fuer styles/icons.less
+  localization/      Skin-Labels (en_US.inc Default, de_DE.inc) fuer den Login
   templates/
     login.html       Override: Zweispalten Hero + Card (begründet, s. u.)
     includes/
