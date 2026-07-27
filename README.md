@@ -44,6 +44,19 @@ Oberfläche — der Roundcube-Kern bleibt unverändert. **Marken-neutral / rebra
 - **Marken-neutral:** Akzentfarbe = Token `--wb-accent`, Logo in `images/`
   austauschbar. Keine Produkt-/Hersteller-Nennung.
 
+## Kompatibilität
+
+Verifiziert in **Chromium/Chrome** und **Firefox** (Login, Mailliste, Lesen,
+Dark-Mode — Custom-Icons via CSS-Maske, Inter-Webfont und Avatare rendern in
+beiden identisch). Die Icons nutzen `mask`/`-webkit-mask`, was auch WebKit/Safari
+abdeckt.
+
+> Deployment-Hinweis: Firefox wendet Stylesheets nur an, wenn sie mit korrektem
+> `Content-Type: text/css` ausgeliefert werden (striktes MIME-Sniffing). Reguläre
+> Apache-/nginx-Konfigurationen tun das automatisch; nur bei einem
+> Roundcube-Router, der *alle* Requests durch PHP leitet, kann der MIME-Type
+> verfälscht werden.
+
 ## Aufbau
 
 ```
