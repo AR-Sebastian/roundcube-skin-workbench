@@ -6809,6 +6809,16 @@ textarea:focus-visible,
 #taskmenu a.selected:not(.compose) .inner {
   font-weight: 600;
 }
+#taskmenu a.compose,
+html.dark-mode #taskmenu a.compose,
+html.dark-mode #taskmenu .action-buttons a.compose {
+  color: #fff !important;
+}
+#taskmenu a.compose:before,
+html.dark-mode #taskmenu a.compose:before,
+html.dark-mode #taskmenu .action-buttons a.compose:before {
+  background-color: #fff !important;
+}
 #layout-sidebar .folderlist li.selected > a:before,
 #layout-sidebar .treelist li.selected > a:before {
   background-color: var(--wb-accent) !important;

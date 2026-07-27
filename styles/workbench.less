@@ -245,6 +245,17 @@ textarea:focus-visible,
     .inner { font-weight: 600; }
 }
 
+// Compose-CTA: Icon (Maske = currentColor) IMMER weiss auf rotem Button.
+// Elastic dark.less setzt "#taskmenu .action-buttons a { color: @color-main }"
+// (= unser Akzent) -> sonst rot-auf-rot & unsichtbar im Dark-Mode.
+#taskmenu a.compose,
+html.dark-mode #taskmenu a.compose,
+html.dark-mode #taskmenu .action-buttons a.compose {
+    color: #fff !important;
+
+    &:before { background-color: #fff !important; }
+}
+
 // Aktiver Ordner: Icon ebenfalls im Akzent (konsistent zur Rail)
 #layout-sidebar .folderlist li.selected > a:before,
 #layout-sidebar .treelist li.selected > a:before {
