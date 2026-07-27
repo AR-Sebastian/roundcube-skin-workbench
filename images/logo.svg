@@ -6,8 +6,7 @@
       <stop offset="1" stop-color="#b91c1c"/>
     </linearGradient>
   </defs>
-  <rect x="1.5" y="10.5" width="54" height="35" rx="7" fill="none" stroke="url(#mark)" stroke-width="5"/>
-  <rect x="15" y="48" width="27" height="5" rx="2.5" fill="url(#mark)"/>
-  <rect x="24" y="40" width="9" height="5" rx="2.5" fill="url(#mark)"/>
+  <rect x="2.5" y="13" width="52" height="38" rx="9" fill="none" stroke="url(#mark)" stroke-width="5"/>
+  <path d="M8 20 L28.5 35 L49 20" fill="none" stroke="url(#mark)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
   <text x="70" y="42" fill="#172033" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24" font-weight="800" letter-spacing=".01em">Workbench</text>
 </svg>
