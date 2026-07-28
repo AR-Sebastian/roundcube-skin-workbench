@@ -30,7 +30,7 @@
       s_compose: "Compose new email", s_reply: "Reply", s_replyall: "Reply all",
       s_forward: "Forward", s_archive: "Archive", s_delete: "Delete",
       s_read: "Mark as read", s_search: "Focus search", s_help: "Show this help",
-      s_esc: "Close / back"
+      s_esc: "Close / back", close: "Close"
     },
     de: {
       mark_read: "Als gelesen markieren", archive: "Archivieren", del: "Löschen",
@@ -38,7 +38,7 @@
       s_compose: "Neue E-Mail verfassen", s_reply: "Antworten", s_replyall: "Allen antworten",
       s_forward: "Weiterleiten", s_archive: "Archivieren", s_delete: "Löschen",
       s_read: "Als gelesen markieren", s_search: "Suche fokussieren", s_help: "Diese Hilfe anzeigen",
-      s_esc: "Schließen / Zurück"
+      s_esc: "Schließen / Zurück", close: "Schließen"
     }
   };
   function lang() {
@@ -118,6 +118,7 @@
     host.classList.add("wb-skel-host");
     var sk = document.createElement("div");
     sk.className = "wb-skeleton";
+    sk.setAttribute("aria-hidden", "true");   // rein dekorativ: nicht vorlesen
     var html = "";
     for (var i = 0; i < 8; i++) {
       html += '<div class="wb-sk-row"><span class="wb-sk-av"></span>' +
@@ -146,8 +147,11 @@
     if (ev) { ev.stopPropagation(); ev.preventDefault(); }
     try {
       var uid = rowUid(row);
-      if (window.rcmail && rcmail.message_list && uid != null) rcmail.message_list.select(uid);
-      if (window.rcmail) rcmail.command(cmd, arg);
+      // Nur agieren, wenn die Zeile eindeutig aufgeloest werden konnte — sonst
+      // wuerde das Kommando die zuvor markierte Nachricht treffen.
+      if (uid == null || !window.rcmail || !rcmail.message_list) return;
+      rcmail.message_list.select(uid);
+      rcmail.command(cmd, arg);
     } catch (e) {}
   }
   function addRowActions(row) {
@@ -175,6 +179,7 @@
   function initProgress() {
     var bar = document.createElement("div");
     bar.className = "wb-progress";
+    bar.setAttribute("aria-hidden", "true");   // rein dekorativ: nicht vorlesen
     document.body.appendChild(bar);
     var active = false, val = 0, timer = null, last = false;
     function tick() { if (!active) return; val += (92 - val) * 0.08; bar.style.width = val.toFixed(1) + "%"; }
@@ -199,6 +204,11 @@
     return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || el.isContentEditable));
   }
   var helpEl = null, helpPrevFocus = null;
+  function focusables(root) {
+    return Array.prototype.slice.call(root.querySelectorAll(
+      'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])'
+    ));
+  }
   function buildHelp() {
     var ov = document.createElement("div");
     ov.className = "wb-help";
@@ -208,6 +218,15 @@
     card.setAttribute("aria-modal", "true");
     card.setAttribute("aria-label", T("shortcuts"));
     card.tabIndex = -1;
+
+    // Schliessen-Button (fokussierbares Steuerelement + Maus-Ausweg)
+    var close = document.createElement("button");
+    close.type = "button";
+    close.className = "wb-help-close";
+    close.setAttribute("aria-label", T("close"));
+    close.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+    close.addEventListener("click", closeHelp);
+
     var h2 = document.createElement("h2"); h2.textContent = T("shortcuts");
     var dl = document.createElement("dl");
     SHORTCUTS.forEach(function (s) {
@@ -217,11 +236,22 @@
       dl.appendChild(dt); dl.appendChild(dd);
     });
     var foot = document.createElement("div"); foot.className = "wb-help-foot"; foot.textContent = T("esc_hint");
-    card.appendChild(h2); card.appendChild(dl); card.appendChild(foot);
+    card.appendChild(close); card.appendChild(h2); card.appendChild(dl); card.appendChild(foot);
     ov.appendChild(card);
     ov.addEventListener("click", function (e) { if (e.target === ov) closeHelp(); });
+
+    // Fokus-Falle: Tab/Shift+Tab bleiben im Dialog (kein Ausbrechen in den Hintergrund)
+    ov.addEventListener("keydown", function (e) {
+      if (e.key !== "Tab") return;
+      var f = focusables(card);
+      if (!f.length) { e.preventDefault(); return; }
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
     document.body.appendChild(ov);
-    try { card.focus(); } catch (e) {}
+    try { close.focus(); } catch (e) {}
     return ov;
   }
   function toggleHelp() { if (helpEl) return closeHelp(); helpPrevFocus = document.activeElement; helpEl = buildHelp(); }

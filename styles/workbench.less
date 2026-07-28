@@ -61,6 +61,7 @@ html.dark-mode {
     --wb-border: #2b3950;
     --wb-nav-bg: #090e18;
     --wb-nav-hover: #1d2a40;
+    --wb-accent-fg: color-mix(in srgb, var(--wb-accent) 62%, white); // heller auf dunklem Grund (WCAG-AA)
     --wb-shadow: 0 10px 30px rgba(0, 0, 0, .24);
     --wb-shadow-sm: 0 4px 16px rgba(0, 0, 0, .28);
 }
@@ -228,6 +229,38 @@ textarea:focus-visible,
     }
 }
 
+// 5c. Grosse Touchscreens (iPad-Landscape, reiner Touch-Laptop): kein Hover ->
+//     das schwebende Tooltip ist unerreichbar. Deshalb hier die Labels DAUERHAFT
+//     als kleine Beschriftung unter dem Icon zeigen, statt einer unlesbaren
+//     Icon-only-Rail. Desktop mit Maus (hover) bleibt Icon-only + Tooltip.
+@media screen and (min-width: (@screen-width-medium + 1px)) and (hover: none) {
+    #taskmenu a {
+        flex-direction: column;
+
+        .inner {
+            position: static;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto;
+            transform: none !important;
+            background: transparent;
+            box-shadow: none;
+            color: var(--wb-nav-idle, #c7d0de);
+            padding: 3px 4px 0;
+            margin: 0;
+            font-size: .62rem;
+            line-height: 1.15;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &:before { display: none; }   // kein Tooltip-Pfeil im statischen Modus
+        }
+
+        &.selected .inner { color: #fff; }
+    }
+}
+
 // Logo in der Rail entfernen (Tool-Fokus: direkt zu den Mails).
 // Betrifft nur das Rail-Logo (#logo) — NICHT das Login-Hero-Logo (#wb-hero-logo).
 #layout-menu #logo,
@@ -337,7 +370,7 @@ input.searchfield {
 
 .messagelist .rowcounter,
 .messagelist td.flag span.unread:before {
-    color: var(--wb-accent);
+    color: var(--wb-accent-fg);
 }
 
 // Modernere Zeilen: mehr Luft, Akzent-Kante bei aktiv/ungelesen, weicher Hover
@@ -651,7 +684,7 @@ ul.recipient-input li.recipient {
 }
 .wb-ra svg { width: 16px; height: 16px; }
 .wb-ra:hover { background: var(--wb-surface-muted); color: var(--wb-text); }
-.wb-ra-archive:hover { color: var(--wb-accent); background: fade(#cc151c, 8%); }
+.wb-ra-archive:hover { color: var(--wb-accent-fg); background: fade(#cc151c, 8%); }
 .wb-ra-trash:hover   { color: var(--wb-danger); background: fade(#b4232a, 8%); }
 .wb-ra-read:hover    { color: var(--wb-success); background: fade(#117551, 8%); }
 
@@ -667,6 +700,7 @@ ul.recipient-input li.recipient {
     padding: 20px;
 }
 .wb-help-card {
+    position: relative;
     background: var(--wb-surface);
     color: var(--wb-text);
     border: 1px solid var(--wb-border);
@@ -677,6 +711,26 @@ ul.recipient-input li.recipient {
     font-family: @wb-font;
 }
 .wb-help-card h2 { margin: 0 0 16px; font-size: 1.15rem; }
+.wb-help-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--wb-muted);
+    cursor: pointer;
+    transition: background-color .13s ease, color .13s ease;
+
+    svg { width: 18px; height: 18px; }
+    &:hover { background: var(--wb-surface-muted); color: var(--wb-text); }
+}
 .wb-help-card dl {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -939,7 +993,7 @@ input.error {
             font-weight: 700;
             letter-spacing: .08em;
             text-transform: uppercase;
-            color: var(--wb-accent);
+            color: var(--wb-accent-fg);
             background: fade(#cc151c, 10%);
             padding: .3rem .6rem;
             border-radius: 999px;
@@ -1040,7 +1094,7 @@ input.error {
 .googie_list .loading,
 #messagestack .loading,
 .spinner {
-    color: var(--wb-accent);
+    color: var(--wb-accent-fg);
 }
 
 // permission-denied / session — als klare Karte
@@ -1119,4 +1173,56 @@ html[dir="rtl"] {
         right: 0;
         border-radius: 3px 0 0 3px;
     }
+}
+
+// ===========================================================================
+// 16. Druck — sauberes Papier: weisser Grund, schwarze Schrift, kein Screen-
+//     Chrome, keine dekorativen/farbigen Elemente (spart Tinte, maximale
+//     Lesbarkeit). Gilt beim Drucken JEDER Ansicht (styles.css wird auch auf
+//     der Druckseite geladen).
+// ===========================================================================
+@media print {
+    html, body,
+    #layout, #layout-content, #print-layout,
+    .messagecontent, #messagebody, #messagepartcontainer {
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+    }
+
+    // Karten-Chrome des Nachrichtenkopfs weg (flach drucken)
+    #message-header,
+    #print-layout #message-header,
+    .contact-header {
+        background: #fff !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding-left: 0 !important;
+    }
+
+    // Header-Beschriftungen neutral statt Akzent (kein Farbdruck)
+    #message-header .subject,
+    #message-header .header-title,
+    #message-header .rcmheader,
+    #message-header table td { color: #000 !important; }
+
+    // Dekorative/Platzhalter-Grafiken nicht drucken
+    .wb-avatar, .wb-avatar-lg,
+    #message-header img.contactphoto, .contactphoto,
+    .wb-progress, .wb-skeleton, .wb-row-actions {
+        display: none !important;
+    }
+
+    // Screen-Chrome (Rail/Ordner/Liste/Toolbars) beim Voll-Seiten-Druck weg
+    #layout-menu, #layout-sidebar, #layout-list,
+    .toolbar, .searchbar, .footer, .pagenav {
+        display: none !important;
+    }
+
+    // Links lesbar auf Papier: dunkel + unterstrichen
+    a, a:link, a:visited { color: #000 !important; text-decoration: underline !important; }
+
+    // Lange Zitate/Nachrichten sauber umbrechen
+    blockquote, pre, #messagebody { page-break-inside: auto; }
 }

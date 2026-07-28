@@ -49,7 +49,6 @@ ul.treelist li div.treetoggle:before,
 .messagelist span.attachment span,
 .messagelist span.flagged:before,
 .messagelist tr.flaggedroot:not(:hover) span.unflagged:before,
-.messagelist tr:hover span.unflagged:before,
 .contactlist td.contact:before,
 .contactlist td.contactgroup:before,
 .contactlist li a:before,
@@ -3032,6 +3031,35 @@ ul.listing.simplelist li {
   font-weight: bold;
   color: #5f6b80;
 }
+.listing-hover-menu {
+  position: absolute;
+  right: 5px;
+  top: -1000px;
+  height: 2.4em;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 0.25em;
+  box-shadow: 0 0 5px lightgrey;
+  border-radius: 0.25em;
+}
+.listing-hover-menu a.button {
+  cursor: pointer;
+  display: inline-block;
+  width: 1.5em;
+  line-height: 1;
+  margin: 0.25em 0.25em;
+  color: #172033;
+}
+.listing-hover-menu a.button:hover {
+  background: transparent;
+}
+.listing-hover-menu span.txt {
+  font-size: 90%;
+  color: #5f6b80;
+  display: inline-block;
+  vertical-align: middle;
+  margin: -1.25em 0.25em 0;
+}
 html.touch .listing:not(.toolbar) li,
 html.touch .listing tbody td {
   line-height: 47px;
@@ -3114,9 +3142,30 @@ html.touch td.selection {
 .listing.iconized li > i:before {
   content: "\f007";
   margin-left: 0.5rem;
+  line-height: normal;
 }
 .listing.iconized li.group > i:before {
   content: "\f0c0";
+}
+#rcmKSearchpane > ul > li {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding: 0.5em 0;
+}
+#rcmKSearchpane > ul > li > span.fields {
+  display: flex;
+  flex-flow: row wrap;
+  width: auto;
+  overflow: hidden;
+  margin: 0 0.25em;
+}
+#rcmKSearchpane > ul > li > span.fields > span.field {
+  flex: 0 0 100%;
+  font-size: 1rem;
+  line-height: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 html.ie11 .listing.iconized li a:before {
   font-size: 1.25rem;
@@ -3394,6 +3443,7 @@ table.fixedcopy {
   cursor: pointer;
 }
 .messagelist tr.flagged td,
+.messagelist tr.flagged span.size,
 .messagelist tr.flagged td.subject span.subject a,
 .messagelist tr.flagged td.subject span.date,
 .messagelist tr.flagged td.subject span.fromto {
@@ -3428,7 +3478,6 @@ table.fixedcopy {
 }
 .messagelist td.subject span.msgicon.status.unread:before {
   content: "\f111";
-  color: #cc151c;
   font-size: 0.5rem;
 }
 .messagelist td.subject span.msgicon.status.unreadchildren:before {
@@ -3458,14 +3507,6 @@ table.fixedcopy {
   opacity: 0.5;
   margin: 0 -0.1em 0 -1.25em;
 }
-.messagelist tr.deleted td.subject span.msgicon.status:before {
-  content: "\f05e" !important;
-  font-weight: 900 !important;
-  font-size: 1rem;
-}
-.messagelist tr.deleted td.subject span.msgicon.status:after {
-  display: none !important;
-}
 .messagelist span.attachment span {
   color: rgba(95, 107, 128, 0.75);
 }
@@ -3491,30 +3532,14 @@ table.fixedcopy {
   content: "\f024";
   color: rgba(95, 107, 128, 0.75);
 }
-.messagelist tr:hover span.unflagged:before {
-  content: "\f024";
-  font-weight: 400;
-}
 .messagelist span.size {
   display: none;
-}
-.messagelist tr:hover span.date {
-  display: none;
-}
-.messagelist tr:hover span.size {
-  display: inline;
 }
 .messagelist.sort-size span.date {
   display: none;
 }
 .messagelist.sort-size span.size {
   display: inline;
-}
-.messagelist.sort-size tr:hover span.date {
-  display: inline;
-}
-.messagelist.sort-size tr:hover span.size {
-  display: none;
 }
 html.layout-phone .messagelist tr,
 html.touch .messagelist tr {
@@ -3924,7 +3949,7 @@ input.smart-upload {
   margin: 0;
 }
 .propform .addfield select {
-  width: 8rem;
+  width: fit-content;
   margin-top: 0.5rem;
 }
 .propform .form-text {
@@ -4720,6 +4745,10 @@ body > li.recipient.ui-sortable-helper.ui-sortable-helper {
 .form-control {
   color: #172033;
 }
+.form-control.custom-select {
+  padding-right: 1.75rem;
+  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center / 8px 10px;
+}
 .form-control:focus {
   color: #172033;
   border-color: #cc151c;
@@ -5319,7 +5348,6 @@ html.layout-phone .image-selector .attachmentslist {
   font-size: 13px;
   width: 100% !important;
   padding-top: 40px;
-  resize: none;
 }
 .html-editor > iframe {
   border-radius: 0.3rem;
@@ -5680,8 +5708,34 @@ body.status-flagged #message-header > .subject:before {
   display: block;
   margin-top: 1em;
 }
+.message-htmlpart *,
+.message-htmlpart ::after,
+.message-htmlpart ::before {
+  box-sizing: initial;
+}
 #compose-attachments {
   margin: 1rem 1rem 0 1rem;
+}
+.suspicious-address-warning:before {
+  font-size: 1.25em;
+  display: block;
+  float: left;
+  margin: 0 0.25rem 0 0;
+  width: 1.18em;
+  height: 1em;
+  font-family: 'Icons';
+  font-style: normal;
+  font-weight: 900;
+  text-decoration: inherit;
+  text-align: center;
+  speak: none;
+  font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  float: none;
+  display: inline-block;
+  content: "\f071";
+  color: #a65f00;
 }
 #composestatusbar {
   opacity: 0.3;
@@ -5950,9 +6004,6 @@ html.dark-mode .messagelist tr:not(.flagged):not(.deleted) td.subject span.fromt
 }
 html.dark-mode .messagelist tr:not(.flagged):not(.deleted) td.subject span.msgicon.status {
   color: #edf2fb;
-}
-html.dark-mode .messagelist tr:not(.flagged):not(.deleted) td.subject span.msgicon.status.unread::before {
-  color: #0d0700;
 }
 html.dark-mode .messagelist tr:not(.flagged):not(.deleted) span.flag {
   color: #edf2fb;
@@ -6483,6 +6534,20 @@ html.dark-mode .bs-popover-auto[x-placement^="bottom"] > .arrow::after,
 html.dark-mode .bs-popover-bottom > .arrow::after {
   border-bottom-color: #2b3950;
 }
+html.dark-mode .listing-hover-menu {
+  background-color: #151e2d;
+  border-color: #2b3950;
+  box-shadow: 0 0 5px black;
+}
+html.dark-mode .listing-hover-menu a.button {
+  color: #edf2fb;
+}
+html.dark-mode .listing-hover-menu a.button:hover {
+  background: transparent;
+}
+html.dark-mode .listing-hover-menu span.txt {
+  color: #9caac0;
+}
 html.dark-mode .nav-tabs {
   border-color: #2b3950;
 }
@@ -6589,6 +6654,7 @@ html.dark-mode .pgpkeyimport li.uid::before {
   --wb-action-contrast: #ffffff;
   --wb-radius: 12px;
   --wb-accent: #cc151c;          /* Marken-/Aktionsfarbe, rebrandbar */
+  --wb-accent-fg: var(--wb-accent); /* Akzent als Vordergrund (Text/Icon); im Dark heller fuer WCAG-AA */
   --wb-action: var(--wb-accent);
   --wb-focus: var(--wb-action);  /* Fokusring nutzt den Akzent */
 }
@@ -6601,6 +6667,7 @@ html[data-wb-theme="dark"] {
   --wb-border: #2b3950;
   --wb-nav-bg: #090e18;
   --wb-nav-hover: #1d2a40;
+  --wb-accent-fg: color-mix(in srgb, var(--wb-accent) 62%, white); /* heller auf dunklem Grund (WCAG-AA) */
   --wb-shadow: 0 10px 30px rgba(0, 0, 0, .24);
   --wb-shadow-sm: 0 4px 16px rgba(0, 0, 0, .28);
 }
@@ -6657,6 +6724,7 @@ html.dark-mode {
   --wb-border: #2b3950;
   --wb-nav-bg: #090e18;
   --wb-nav-hover: #1d2a40;
+  --wb-accent-fg: color-mix(in srgb, var(--wb-accent) 62%, white);
   --wb-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
   --wb-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.28);
 }
@@ -6795,6 +6863,34 @@ textarea:focus-visible,
     transform: translateY(-50%) translateX(8px);
   }
 }
+@media screen and (min-width: 1025px) and (hover: none) {
+  #taskmenu a {
+    flex-direction: column;
+  }
+  #taskmenu a .inner {
+    position: static;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto;
+    transform: none !important;
+    background: transparent;
+    box-shadow: none;
+    color: var(--wb-nav-idle, #c7d0de);
+    padding: 3px 4px 0;
+    margin: 0;
+    font-size: 0.62rem;
+    line-height: 1.15;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #taskmenu a .inner:before {
+    display: none;
+  }
+  #taskmenu a.selected .inner {
+    color: #fff;
+  }
+}
 #layout-menu #logo,
 #taskmenu .popover-header #logo {
   display: none !important;
@@ -6878,7 +6974,7 @@ input.searchfield {
 }
 .messagelist .rowcounter,
 .messagelist td.flag span.unread:before {
-  color: var(--wb-accent);
+  color: var(--wb-accent-fg);
 }
 .messagelist tbody tr.message > td {
   padding-top: 9px;
@@ -7239,7 +7335,7 @@ ul.recipient-input li.recipient {
   color: var(--wb-text);
 }
 .wb-ra-archive:hover {
-  color: var(--wb-accent);
+  color: var(--wb-accent-fg);
   background: rgba(204, 21, 28, 0.08);
 }
 .wb-ra-trash:hover {
@@ -7261,6 +7357,7 @@ ul.recipient-input li.recipient {
   padding: 20px;
 }
 .wb-help-card {
+  position: relative;
   background: var(--wb-surface);
   color: var(--wb-text);
   border: 1px solid var(--wb-border);
@@ -7273,6 +7370,31 @@ ul.recipient-input li.recipient {
 .wb-help-card h2 {
   margin: 0 0 16px;
   font-size: 1.15rem;
+}
+.wb-help-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--wb-muted);
+  cursor: pointer;
+  transition: background-color 0.13s ease, color 0.13s ease;
+}
+.wb-help-close svg {
+  width: 18px;
+  height: 18px;
+}
+.wb-help-close:hover {
+  background: var(--wb-surface-muted);
+  color: var(--wb-text);
 }
 .wb-help-card dl {
   display: grid;
@@ -7529,7 +7651,7 @@ input.error {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--wb-accent);
+  color: var(--wb-accent-fg);
   background: rgba(204, 21, 28, 0.1);
   padding: 0.3rem 0.6rem;
   border-radius: 999px;
@@ -7616,7 +7738,7 @@ input.error {
 .googie_list .loading,
 #messagestack .loading,
 .spinner {
-  color: var(--wb-accent);
+  color: var(--wb-accent-fg);
 }
 .task-error #layout-content,
 .session-error {
@@ -7690,6 +7812,64 @@ html[dir="rtl"] #layout-sidebar .folderlist li.selected > a:after {
   left: auto;
   right: 0;
   border-radius: 3px 0 0 3px;
+}
+@media print {
+  html,
+  body,
+  #layout,
+  #layout-content,
+  #print-layout,
+  .messagecontent,
+  #messagebody,
+  #messagepartcontainer {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+  #message-header,
+  #print-layout #message-header,
+  .contact-header {
+    background: #fff !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-left: 0 !important;
+  }
+  #message-header .subject,
+  #message-header .header-title,
+  #message-header .rcmheader,
+  #message-header table td {
+    color: #000 !important;
+  }
+  .wb-avatar,
+  .wb-avatar-lg,
+  #message-header img.contactphoto,
+  .contactphoto,
+  .wb-progress,
+  .wb-skeleton,
+  .wb-row-actions {
+    display: none !important;
+  }
+  #layout-menu,
+  #layout-sidebar,
+  #layout-list,
+  .toolbar,
+  .searchbar,
+  .footer,
+  .pagenav {
+    display: none !important;
+  }
+  a,
+  a:link,
+  a:visited {
+    color: #000 !important;
+    text-decoration: underline !important;
+  }
+  blockquote,
+  pre,
+  #messagebody {
+    page-break-inside: auto;
+  }
 }
 /* Eigenes Linien-Icon-Set (ersetzt sichtbarste FontAwesome-Glyphen) */
 /**

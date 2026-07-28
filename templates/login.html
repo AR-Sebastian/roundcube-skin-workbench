@@ -31,7 +31,7 @@
 				<div id="login-footer" role="contentinfo">
 					<roundcube:object name="version" condition="config:display_product_info == 2" />
 					<roundcube:if condition="config:support_url" />
-						<a href="<roundcube:var name='config:support_url' />" target="_blank" class="support-link"><roundcube:label name="support" /></a>
+						<a href="<roundcube:var name='config:support_url' />" target="_blank" rel="noopener" class="support-link"><roundcube:label name="support" /></a>
 					<roundcube:endif />
 					<roundcube:container name="loginfooter" id="login-footer" />
 				</div>

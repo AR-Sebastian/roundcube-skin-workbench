@@ -27,6 +27,7 @@
   --wb-action-contrast: #ffffff;
   --wb-radius: 12px;
   --wb-accent: #cc151c;          /* Marken-/Aktionsfarbe, rebrandbar */
+  --wb-accent-fg: var(--wb-accent); /* Akzent als Vordergrund (Text/Icon); im Dark heller fuer WCAG-AA */
   --wb-action: var(--wb-accent);
   --wb-focus: var(--wb-action);  /* Fokusring nutzt den Akzent */
 }
@@ -39,6 +40,7 @@ html[data-wb-theme="dark"] {
   --wb-border: #2b3950;
   --wb-nav-bg: #090e18;
   --wb-nav-hover: #1d2a40;
+  --wb-accent-fg: color-mix(in srgb, var(--wb-accent) 62%, white); /* heller auf dunklem Grund (WCAG-AA) */
   --wb-shadow: 0 10px 30px rgba(0, 0, 0, .24);
   --wb-shadow-sm: 0 4px 16px rgba(0, 0, 0, .28);
 }

@@ -50,9 +50,10 @@ Oberfläche — der Roundcube-Kern bleibt unverändert. **Marken-neutral / rebra
 
 ## Kompatibilität
 
-Verifiziert in **Chromium/Chrome** und **Firefox** (Login, Mailliste, Lesen,
-Dark-Mode — Custom-Icons via CSS-Maske, Inter-Webfont und Avatare rendern in
-beiden identisch). Die Icons nutzen `mask`/`-webkit-mask`, was auch WebKit/Safari
+Verifiziert auf **Roundcube 1.6 und 1.7** (`min-version` 1.6.0) und in
+**Chromium/Chrome** sowie **Firefox** (Login, Mailliste, Lesen, Verfassen,
+Dark-Mode — Custom-Icons via CSS-Maske, Inter-Webfont und Avatare rendern
+identisch). Die Icons nutzen `mask`/`-webkit-mask`, was auch WebKit/Safari
 abdeckt.
 
 > Deployment-Hinweis: Firefox wendet Stylesheets nur an, wenn sie mit korrektem
@@ -129,7 +130,7 @@ Der `roundcube/plugin-installer` legt das Skin automatisch unter `skins/workbenc
 **Manuell** (Release-Archiv):
 
 ```bash
-tar xzf workbench-skin-1.1.2.tar.gz -C skins/   # ergibt skins/workbench/
+tar xzf workbench-skin-1.2.0.tar.gz -C skins/   # ergibt skins/workbench/
 ```
 
 Releases: <https://github.com/AR-Sebastian/roundcube-skin-workbench/releases>
