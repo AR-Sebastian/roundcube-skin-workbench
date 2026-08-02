@@ -1,11 +1,15 @@
 {
-    "name": "ar-sebastian/roundcube-skin-workbench",
+    "name": "ar-sebastian/workbench",
     "type": "roundcube-skin",
-    "description": "Workbench — ein von Elastic abgeleitetes, marken-neutrales Roundcube-Skin: dunkle Seiten-Navigation, roter Akzent, Inter, Light + Dark, responsive.",
+    "description": "A modern, brand-neutral Roundcube skin based on Elastic, featuring light and dark modes, a compact navigation rail and responsive layouts.",
     "keywords": ["roundcube", "skin", "elastic", "workbench", "dark-mode"],
     "license": "CC-BY-SA-3.0",
     "authors": [
-        { "name": "Workbench" }
+        {
+            "name": "Sebastian Heldt",
+            "homepage": "https://github.com/AR-Sebastian",
+            "role": "Developer and Maintainer"
+        }
     ],
     "extra": {
         "roundcube": {

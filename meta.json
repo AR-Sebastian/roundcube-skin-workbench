@@ -1,7 +1,7 @@
 {
     "name": "Workbench",
     "extends": "elastic",
-    "author": "Workbench",
+    "author": "Sebastian Heldt",
     "license": "Creative Commons Attribution-ShareAlike",
     "license-url": "http://creativecommons.org/licenses/by-sa/3.0/",
     "localization": true,

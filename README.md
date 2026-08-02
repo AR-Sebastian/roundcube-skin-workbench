@@ -1,112 +1,144 @@
-# Roundcube-Skin „workbench"
+# Workbench — a modern skin for Roundcube
 
-[![Packagist Version](https://img.shields.io/packagist/v/ar-sebastian/roundcube-skin-workbench)](https://packagist.org/packages/ar-sebastian/roundcube-skin-workbench)
-[![Packagist Downloads](https://img.shields.io/packagist/dt/ar-sebastian/roundcube-skin-workbench)](https://packagist.org/packages/ar-sebastian/roundcube-skin-workbench)
-[![License](https://img.shields.io/packagist/l/ar-sebastian/roundcube-skin-workbench)](LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/ar-sebastian/workbench)](https://packagist.org/packages/ar-sebastian/workbench)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/ar-sebastian/workbench)](https://packagist.org/packages/ar-sebastian/workbench)
+[![License](https://img.shields.io/packagist/l/ar-sebastian/workbench)](LICENSE)
 
-Ein von **Elastic abgeleitetes** Roundcube-Skin im „workbench"-Look: dunkle
-Seiten-Navigation, heller Karten-Canvas, roter Marken-Akzent (`#cc151c`),
-Inter-Typografie, 12-px-Radien, sichtbarer Fokus, Light **und** Dark. Nur
-Oberfläche — der Roundcube-Kern bleibt unverändert. **Marken-neutral / rebrandbar**
-(Akzentfarbe = Token `--wb-accent`, Logo in `images/` austauschbar).
+A third-party Roundcube skin **derived from Elastic**: a dark navigation rail, a
+light card canvas, a red brand accent (`#cc151c`), Inter typography, 12&nbsp;px
+radii, visible keyboard focus, and both **light and dark** modes. Surface only —
+the Roundcube core stays untouched. **Brand-neutral / rebrandable** (accent =
+the `--wb-accent` token, logo files in `images/` are replaceable).
 
-- **Basis:** Roundcube 1.6.x, Skin `elastic`
-- **Prinzip:** `meta.json` → `"extends": "elastic"`; Overrides ausschließlich in
-  `skins/workbench/`. Kein Eingriff in Core, Plugins oder `skins/elastic/`.
+- **Base:** Roundcube 1.6 LTS and 1.7, skin `elastic`
+- **Principle:** `meta.json` → `"extends": "elastic"`; all overrides live in
+  `skins/workbench/` only. No changes to the core, plugins, or `skins/elastic/`.
+
+🇩🇪 Eine deutsche Fassung dieser Dokumentation: **[README.de.md](README.de.md)**
 
 ## Screenshots
 
-| Login | Posteingang (Light) |
+| Login | Inbox (light) |
 |---|---|
-| ![Login](docs/login-light.png) | ![Posteingang hell](docs/mail-light.png) |
+| ![Login](docs/login-light.png) | ![Inbox light](docs/mail-light.png) |
 
-| Posteingang (Dark) | Nachricht lesen |
+| Inbox (dark) | Reading a message |
 |---|---|
-| ![Posteingang dunkel](docs/mail-dark.png) | ![Nachricht lesen](docs/mail-read.png) |
+| ![Inbox dark](docs/mail-dark.png) | ![Reading a message](docs/mail-read.png) |
 
 ## Features
 
-- **Light + Dark** über den nativen Roundcube-Toggle (Mond-Button); Tokens auf
+- **Light + dark** via Roundcube's native toggle (moon button); tokens on
   `html.dark-mode`.
-- **Icon-only Task-Rail** mit Hover-Tooltips; eigenes Linien-Icon-Set (Lucide-Stil)
-  statt der auffälligsten FontAwesome-Glyphen.
-- **Initialen-Avatare** in Liste, Lesekopf und Empfänger-Chips (rein kosmetisch, JS).
-- **UX-Extras** (dezent, abschaltbar durch Entfernen von `workbench.js`):
-  Skeleton-Loader, Top-Progressbar, Hover-Schnellaktionen, Tastatur-Shortcuts
-  mit Cheatsheet (`?`).
-- **Internationalisierung:** Skin-Localization (`localization/en_US.inc` +
-  `de_DE.inc`, `meta.json` → `"localization": true`) für den Login; EN/DE-Wörterbuch
-  in `workbench.js` und `watermark.html`, Sprache aus `rcmail.env.lang`.
-  **Englisch ist Default.**
-- **RTL:** Elastic liefert das Basis-Flip; die Custom-Komponenten (Avatare,
-  Hover-Aktionen, Rail-Tooltip, Aktiv-Marker, Lesekopf-Avatar) sind für
-  `html[dir="rtl"]` gespiegelt.
-- **Touch:** Hover-Schnellaktionen werden auf `@media (hover: none)` ausgeblendet —
-  mobil greift die Standard-Toolbar.
-- **A11y:** sichtbarer Fokus, `aria-hidden` für dekorative Avatare, Cheatsheet als
-  `aria-modal` mit Fokus-Setzen und -Rücksprung.
-- **Marken-neutral:** Akzentfarbe = Token `--wb-accent`, Logo in `images/`
-  austauschbar. Keine Produkt-/Hersteller-Nennung.
+- **Icon-only task rail** with hover tooltips (and persistent labels on wide
+  touchscreens); a dedicated line-icon set (Lucide) replaces the most prominent
+  FontAwesome glyphs.
+- **Initials avatars** in the list, reading header and recipient chips
+  (cosmetic, JS only).
+- **UX extras** (subtle, removable by deleting `workbench.js`): skeleton loader,
+  top progress bar, hover quick-actions, keyboard shortcuts with a cheat sheet
+  (`?`).
+- **Internationalization:** skin localization (`localization/en_US.inc` +
+  `de_DE.inc`, `meta.json` → `"localization": true`) for the login; an EN/DE
+  dictionary in `workbench.js` and `watermark.html` keyed off `rcmail.env.lang`.
+  **English is the default.**
+- **Accessibility:** visible focus everywhere, `aria-hidden` on decorative
+  elements, the cheat sheet is an `aria-modal` dialog with focus trapping and a
+  close button, and dark-mode accent text meets WCAG AA contrast.
+- **Print:** a clean, ink-saving print stylesheet (white background, black text,
+  no screen chrome or avatars, underlined links).
+- **RTL:** Elastic provides the base flip; the custom components (avatars,
+  quick-actions, rail tooltip, active marker, reading-header avatar) are mirrored
+  for `html[dir="rtl"]`.
+- **Brand-neutral:** accent = the `--wb-accent` token, logo replaceable in
+  `images/`. No product or vendor names.
 
-## Kompatibilität
+## Compatibility
 
-Verifiziert auf **Roundcube 1.6 und 1.7** (`min-version` 1.6.0) und in
-**Chromium/Chrome** sowie **Firefox** (Login, Mailliste, Lesen, Verfassen,
-Dark-Mode — Custom-Icons via CSS-Maske, Inter-Webfont und Avatare rendern
-identisch). Die Icons nutzen `mask`/`-webkit-mask`, was auch WebKit/Safari
-abdeckt.
+Verified on **Roundcube 1.6 LTS and 1.7** (`min-version` 1.6.0) in
+**Chromium/Chrome** and **Firefox** (login, message list, reading, composing,
+dark mode — custom icons via CSS mask, the Inter webfont and avatars render
+identically). The icons use `mask` / `-webkit-mask`, which also covers
+WebKit/Safari.
 
-> Deployment-Hinweis: Firefox wendet Stylesheets nur an, wenn sie mit korrektem
-> `Content-Type: text/css` ausgeliefert werden (striktes MIME-Sniffing). Reguläre
-> Apache-/nginx-Konfigurationen tun das automatisch; nur bei einem
-> Roundcube-Router, der *alle* Requests durch PHP leitet, kann der MIME-Type
-> verfälscht werden.
+> Deployment note: Firefox only applies stylesheets served with the correct
+> `Content-Type: text/css` (strict MIME checking). Regular Apache/nginx setups do
+> this automatically; the MIME type can only be mangled by a Roundcube router that
+> pipes *all* requests through PHP.
 
-## Aufbau
+## Installation
+
+### Composer (recommended)
+
+```bash
+composer require ar-sebastian/workbench
+```
+
+The `roundcube/plugin-installer` places the skin at `skins/workbench/` and can
+activate it interactively.
+
+### Manual (release archive)
+
+```bash
+tar xzf workbench-skin-1.2.1.tar.gz -C skins/   # results in skins/workbench/
+```
+
+Releases: <https://github.com/AR-Sebastian/roundcube-skin-workbench/releases>
+
+## Activation
+
+In `config/config.inc.php`: `$config['skin'] = 'workbench';` — or per user in the
+Roundcube settings. Then hard-reload (assets are versioned with `?s=`).
+
+## Dark mode
+
+Roundcube has a **native** dark toggle (the moon button in the task menu) that
+sets `html.dark-mode` (cookie `colorMode`). The skin puts its dark tokens on
+`html.dark-mode` **and** on `html[data-wb-theme="dark"]`, so it reuses the
+existing, working toggle rather than a fragile custom one.
+
+## Layout
 
 ```
 skins/workbench/
   meta.json          extends: elastic, dark_mode_support
   styles/
-    _tokens.css      §4 Design-Tokens (--wb-*), Light + Dark, verbatim
-    _map.less        Elastic-LESS-Variablen  <=  Workbench-Tokens
-    _variables.less  Hook -> @import "_map" (Elastic optional-Variablen-Hook)
-    _styles.less     Hook -> Tokens inline + @import "workbench"
-    workbench.less    Komponenten-Overrides (Nav/Shell/Listen/Login/Zustände/A11y)
-    icons.less       Eigenes Linien-Icon-Set (Lucide-Stil) als CSS-Maske + currentColor
-                     — ersetzt die sichtbarsten FontAwesome-Glyphen (Task-Rail,
-                     Ordner, Toolbar). Generiert via tools/genicons (nicht von Hand).
-    styles.css       kompiliert (wird von Roundcube geladen)
-    styles.min.css   minifiziert
-    print.css        Palette-Remapping fürs Drucken
-    embed.css        Palette-Remapping für Nachrichten-/Editor-Inhalt
-  fonts/             Inter 400/500/600/700 (self-hosted) + FontAwesome (aus Elastic)
-  images/            logo.svg, logo-dark.svg, favicon.svg (aus workbench-Theme) + OAuth-Icons
-  watermark.html     Eigener Leerzustand im Lesebereich (statt Elastic-Logo-Wasserzeichen)
-  workbench.js       Skin-JS (kosmetisch/UX): Initialen-Avatare (Liste/Lesekopf/
-                     Empfaenger-Chips), Skeleton-Loader, Top-Progressbar,
-                     Hover-Schnellaktionen, Tastatur-Shortcuts + Cheatsheet ("?")
-  tools/genicons.js  Generator fuer styles/icons.less
-  localization/      Skin-Labels (en_US.inc Default, de_DE.inc) fuer den Login
+    _tokens.css      design tokens (--wb-*), light + dark
+    _map.less        Elastic LESS variables  <=  Workbench tokens
+    _variables.less  hook -> @import "_map" (Elastic optional-variables hook)
+    _styles.less     hook -> tokens inline + @import "workbench"
+    workbench.less   component overrides (nav/shell/list/login/states/a11y/print)
+    icons.less       Lucide line-icon set as CSS mask + currentColor; generated
+                     by tools/genicons.js (do not edit by hand)
+    styles.css       compiled (loaded by Roundcube)
+    styles.min.css   minified
+    print.css        palette remap for printing
+    embed.css        palette remap for message/editor content
+  fonts/             Inter 400/500/600/700 (self-hosted) + FontAwesome (from Elastic)
+  images/            logo.svg, logo-dark.svg, favicon.svg + OAuth icons
+  watermark.html     custom empty state for the reading pane
+  workbench.js       skin JS (cosmetic/UX): initials avatars, skeleton loader,
+                     top progress bar, hover quick-actions, keyboard shortcuts + cheat sheet
+  tools/genicons.js  generator for styles/icons.less
+  localization/      skin labels (en_US.inc default, de_DE.inc) for the login
   templates/
-    login.html       Override: Zweispalten Hero + Card (begründet, s. u.)
+    login.html       override: two-column hero + card
     includes/
-      layout.html    Override: identisch zu Elastic + lädt /workbench.js (1 Zeile)
-  .evidence/         Vergleichs-Screenshots (nur synthetische Daten)
+      layout.html    override: identical to Elastic + loads /workbench.js (one line)
 ```
 
 ## Build
 
-Kompiliert die **Elastic-Entrypoints** mit `--include-path` auf diesen Skin-Ordner.
-Dadurch greifen die offiziellen Elastic-Hooks (`_variables` / `_styles`) unsere
-Overrides — **ohne** eine Elastic-Datei zu verändern.
+Compile the **Elastic entrypoints** with `--include-path` pointing at this skin
+folder. That lets the official Elastic hooks (`_variables` / `_styles`) pick up the
+overrides **without** modifying any Elastic file.
 
 ```bash
-# aus skins/workbench/
+# from skins/workbench/
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
 
-Manuell (Kern des Builds):
+Manual (core of the build):
 
 ```bash
 lessc --include-path=skins/workbench/styles skins/elastic/styles/styles.less skins/workbench/styles/styles.css
@@ -115,49 +147,16 @@ lessc --include-path=skins/workbench/styles skins/elastic/styles/print.less skin
 lessc --include-path=skins/workbench/styles skins/elastic/styles/embed.less skins/workbench/styles/embed.css
 ```
 
-Voraussetzung: Node/npm; `lessc` (less@4) + optional `less-plugin-clean-css`.
-
-## Installation
-
-**Composer** (empfohlen, via Packagist):
-
-```bash
-composer require ar-sebastian/roundcube-skin-workbench
-```
-
-Der `roundcube/plugin-installer` legt das Skin automatisch unter `skins/workbench/` ab.
-
-**Manuell** (Release-Archiv):
-
-```bash
-tar xzf workbench-skin-1.2.0.tar.gz -C skins/   # ergibt skins/workbench/
-```
-
-Releases: <https://github.com/AR-Sebastian/roundcube-skin-workbench/releases>
-
-## Aktivierung
-
-`config/config.inc.php`: `$config['skin'] = 'workbench';` — oder pro Nutzer in den
-Roundcube-Einstellungen. Danach hart neu laden (Assets sind mit `?s=` versioniert).
-
-## Dark-Mode
-
-Roundcube besitzt einen **nativen** Dark-Schalter (Mond-Button im Taskmenu), der
-`html.dark-mode` setzt (Cookie `colorMode`). Das Skin legt seine Dark-Tokens auf
-`html.dark-mode` **und** auf das WP-Attribut `html[data-wb-theme="dark"]`. Es wird
-also der vorhandene, funktionierende Toggle benutzt statt eines fragilen eigenen.
-
-## Bewusste Abweichungen vom WP
-
-1. **Dark-Selektor:** `html.dark-mode` (Roundcube-nativ) statt ausschließlich
-   `data-wb-theme` — nutzt den vorhandenen Toggle. `data-wb-theme` bleibt als Alias.
-2. **Variablen-Datei** heißt in Elastic `variables.less` (nicht `_variables.less`).
-   Der Override läuft über den optionalen `_variables`-Hook via `--include-path`.
-3. **Inter** ist self-hosted (WP §4), obwohl das Panel-Theme Inter nur als
-   Font-Stack ohne Webfont nutzt. Bezug über npm `@fontsource/inter` (kein CDN).
+Requires Node/npm; `lessc` (less@4) + optional `less-plugin-clean-css`.
 
 ## Rollback
 
-Skin abwählen (Standard-Elastic aktiv) und Ordner `skins/workbench/` entfernen. Da
-keine Core-/Plugin-/Elastic-Dateien verändert wurden, ist der Rückbau vollständig
-und ohne Nebenwirkung.
+Deselect the skin (stock Elastic becomes active again) and remove the
+`skins/workbench/` folder. Since no core/plugin/Elastic files were modified, the
+removal is complete and side-effect-free.
+
+## License & credits
+
+The skin is licensed **CC BY-SA 3.0** (same as the Elastic base skin). Third-party
+components (Elastic, Inter, Font Awesome, Lucide icons) and their licenses are
+listed in **[NOTICE.md](NOTICE.md)**.
